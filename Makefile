@@ -3,7 +3,7 @@ GCCPREFIX := "i686-elf-"
 CC := $(GCCPREFIX)gcc
 AS := $(GCCPREFIX)as
 
-FLAGS := -ffreestanding -O1
+FLAGS := -ffreestanding -O1 -g
 CCFLAGS := $(FLAGS) -std=c99 -Wall -Wextra
 LDFLAGS := $(FLAGS) -nostdlib
 
