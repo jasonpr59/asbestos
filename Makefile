@@ -17,6 +17,9 @@ ASMSOURCES := $(shell find kernel -type f -name "*.s")
 CSOURCES := $(shell find kernel -type f -name "*.c")
 HDRFILES := $(shell find kernel -type f -name "*.h")
 
+# Detect dependencies.
+DEPFILES := $(patsubst %.c, %.d,$(CSOURCES))
+-include $(DEPFILES)
 
 # Setup object files.
 OBJDIR := obj
@@ -26,7 +29,7 @@ ALLOBJS := $(ASMOBJS) $(COBJS)
 
 $(OBJDIR)/%.o : %.c
 	@mkdir -p $(@D)
-	$(CC) -c $< -o $@ $(CCFLAGS)
+	$(CC) -c $< -o $@ $(CCFLAGS) -MMD -MP
 
 $(OBJDIR)/%.o : %.s
 	@mkdir -p $(@D)
@@ -47,7 +50,7 @@ $(KERNIMG): $(ALLOBJS)
 kernel: $(KERNIMG)
 
 clean:
-	@-rm -rf $(OBJDIR) $(KERNIMG)
+	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG)
 
 QEMU := qemu-system-i386
 qemu: kernel
