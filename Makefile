@@ -49,3 +49,6 @@ kernel: $(KERNIMG)
 clean:
 	@-rm -rf $(OBJDIR) $(KERNIMG)
 
+QEMU := qemu-system-i386
+qemu: kernel
+	$(QEMU) -kernel $(KERNIMG)
