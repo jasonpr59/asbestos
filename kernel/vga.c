@@ -1,3 +1,4 @@
+#include "string.h"
 #include "vga.h"
 
 // Returns a color palette byte that specifies a foreground and
@@ -44,6 +45,12 @@ void vga_place_character(char character, uint8_t color_palette, int row, int col
   vga_buffer[index] = vga_character(character, color_palette);
 }
 
+void vga_erase_row(int row) {
+  for (int column = 0; column < kVgaWidth; column++) {
+    vga_place_character(' ', vga_color_palette, row, column);
+  }
+}
+
 // Reposition the cursor, and possibly scroll the screen, so that the
 // cursor is in bounds.
 void vga_reposition() {
@@ -53,10 +60,15 @@ void vga_reposition() {
   }
   int overhang = vga_row - kVgaHeight + 1;
   if (overhang > 0) {
-    // TODO(jasonpr): "Scroll the viewport."
+    // We'll scroll the screen by 'overhang' rows.
+    const int bytesToScroll = overhang * kVgaWidth * sizeof(VgaCharacter);
+    memmove((void *) kVgaBuffer, (void *) (kVgaBuffer + bytesToScroll),
+	    kVgaWidth * kVgaHeight * sizeof(VgaCharacter) - bytesToScroll);
+    for (int row = kVgaHeight - overhang; row < kVgaHeight; row++) {
+      vga_erase_row(row);
+    }
     vga_row = kVgaHeight - 1;
   }
-
 }
 
 void vga_write_newline() {
