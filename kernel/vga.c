@@ -44,24 +44,33 @@ void vga_place_character(char character, uint8_t color_palette, int row, int col
   vga_buffer[index] = vga_character(character, color_palette);
 }
 
+// Reposition the cursor, and possibly scroll the screen, so that the
+// cursor is in bounds.
+void vga_reposition() {
+  if (vga_column >= kVgaWidth) {
+    vga_column = 0;
+    vga_row++;
+  }
+  int overhang = vga_row - kVgaHeight + 1;
+  if (overhang > 0) {
+    // TODO(jasonpr): "Scroll the viewport."
+    vga_row = kVgaHeight - 1;
+  }
+
+}
+
+void vga_write_newline() {
+  vga_column = 0;
+  vga_row++;
+  vga_reposition();
+}
+
 void vga_write(char character) {
   // Write the character.
   vga_place_character(character, vga_color_palette, vga_row, vga_column);
-
   // Advance the cursor.
   vga_column++;
-  if (vga_column < kVgaWidth) {
-    return;
-  }
-  vga_column = 0;
-  vga_row++;
-
-  if (vga_row < kVgaHeight) {
-    return;
-  }
-
-  // Handle overflow.  For now, start writing from the top again!
-  vga_row = 0;
+  vga_reposition();
 }
 
 void vga_write_string(char* string) {
