@@ -4,6 +4,8 @@
 #ifndef VGA_H_
 #define VGA_H_
 
+typedef uint16_t VgaCharacter;
+
 enum VgaColors {
   kColorBlack = 0,
   kColorBlue = 1,
@@ -24,7 +26,7 @@ enum VgaColors {
 };
 
 uint8_t vga_color_palette_byte(enum VgaColors foreground, enum VgaColors background);
-uint16_t vga_character(char character, uint8_t color_palette);
+VgaCharacter vga_character(char character, uint8_t color_palette);
 void vga_initialize();
 void vga_set_color_palette(uint8_t color_palette);
 void vga_place_character(char character, uint8_t color_palette, int row, int column);
