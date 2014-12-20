@@ -1,6 +1,7 @@
 # Setup toolchain.
 GCCPREFIX := "i686-elf-"
 CC := $(GCCPREFIX)gcc
+OBJDUMP := $(GCCPREFIX)objdump
 AS := $(GCCPREFIX)as
 
 FLAGS := -ffreestanding -O1 -g
@@ -38,19 +39,20 @@ $(OBJDIR)/%.o : %.s
 
 # Generate the actual kernel image.
 KERNIMG := asbestos.bin
+KERNASM := $(KERNIMG).asm
 LDSCRIPT := linker.ld
 
 $(KERNIMG): $(ALLOBJS)
 	@echo $(ALLOBJS)
 	$(CC) -T $(LDSCRIPT) -o $@  $(LDFLAGS) $(ALLOBJS) -lgcc
-
+	$(OBJDUMP) -S $@ > $(KERNASM)
 
 # Setup high-level targets.
 
 kernel: $(KERNIMG)
 
 clean:
-	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG)
+	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG) $(KERNASM)
 
 QEMU := qemu-system-i386 -kernel $(KERNIMG) -serial mon:stdio
 qemu: kernel
