@@ -4,35 +4,36 @@ CC := $(GCCPREFIX)gcc
 OBJDUMP := $(GCCPREFIX)objdump
 AS := $(GCCPREFIX)as
 
-FLAGS := -ffreestanding -O1 -g
-CCFLAGS := $(FLAGS) -std=c99 -Wall -Wextra
-LDFLAGS := $(FLAGS) -nostdlib
-
-
 # Elminate default suffix rules.
 .SUFFIXES:
 
+SRCDIR = src
+LIBDIR = $(SRCDIR)/lib
 
 # Find source files.
-ASMSOURCES := $(shell find kernel -type f -name "*.s")
-CSOURCES := $(shell find kernel -type f -name "*.c")
-HDRFILES := $(shell find kernel -type f -name "*.h")
+ASMSOURCES := $(shell find $(SRCDIR) -type f -name "*.s")
+CSOURCES := $(shell find $(SRCDIR) -type f -name "*.c")
+HDRFILES := $(shell find $(SRCDIR) -type f -name "*.h")
 
 # Detect dependencies.
 DEPFILES := $(patsubst %.c, %.d,$(CSOURCES))
 -include $(DEPFILES)
 
 # Setup object files.
+FLAGS := -ffreestanding -O1 -g
+CCFLAGS := $(FLAGS) -std=c99 -Wall -Wextra -I$(LIBDIR)
+LDFLAGS := $(FLAGS) -nostdlib
+
 OBJDIR := obj
-ASMOBJS := $(patsubst %.s,$(OBJDIR)/%.o,$(ASMSOURCES))
-COBJS := $(patsubst %.c,$(OBJDIR)/%.o,$(CSOURCES))
+ASMOBJS := $(patsubst $(SRCDIR)/%.s,$(OBJDIR)/%.o,$(ASMSOURCES))
+COBJS := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(CSOURCES))
 ALLOBJS := $(ASMOBJS) $(COBJS)
 
-$(OBJDIR)/%.o : %.c
+$(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CCFLAGS) -MMD -MP
 
-$(OBJDIR)/%.o : %.s
+$(OBJDIR)/%.o : $(SRCDIR)/%.s
 	@mkdir -p $(@D)
 	$(AS) -c $< -o $@
 

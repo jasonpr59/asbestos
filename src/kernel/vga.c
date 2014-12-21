@@ -1,4 +1,4 @@
-#include "string.h"
+#include <string.h>
 #include "vga.h"
 
 // Returns a color palette byte that specifies a foreground and
