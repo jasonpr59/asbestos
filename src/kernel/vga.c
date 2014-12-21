@@ -1,4 +1,5 @@
 #include <string.h>
+#include <x86.h>
 #include "vga.h"
 
 // Returns a color palette byte that specifies a foreground and
@@ -51,6 +52,21 @@ void vga_erase_row(int row) {
   }
 }
 
+static const int kCursorSelectorIoPort = 0x3D4;
+static const int kCursorValueIoPort = 0x3D5;
+static const uint8_t kCursorSelectorHighBits = 14;
+static const uint8_t kCursorSelectorLowBits = 15;
+
+void vga_update_cursor() {
+  uint16_t cursor_position = kVgaWidth * vga_row + vga_column;
+
+  outb(kCursorSelectorIoPort, kCursorSelectorHighBits);
+  outb(kCursorValueIoPort, cursor_position >> 8);
+
+  outb(kCursorSelectorIoPort, kCursorSelectorLowBits);
+  outb(kCursorValueIoPort, cursor_position & 0xFF);
+}
+
 // Reposition the cursor, and possibly scroll the screen, so that the
 // cursor is in bounds.
 void vga_reposition() {
@@ -69,6 +85,7 @@ void vga_reposition() {
     }
     vga_row = kVgaHeight - 1;
   }
+  vga_update_cursor();
 }
 
 void vga_write_newline() {
