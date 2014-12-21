@@ -31,6 +31,7 @@ void vga_initialize();
 void vga_set_color_palette(uint8_t color_palette);
 void vga_place_character(char character, uint8_t color_palette, int row, int column);
 void vga_write(char character);
+void vga_write_newline();
 void vga_write_string(char* string);
 
 #endif  // VGA_H_
