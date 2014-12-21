@@ -46,7 +46,7 @@ void vga_place_character(char character, uint8_t color_palette, int row, int col
 }
 
 void vga_erase_row(int row) {
-  for (int column = 0; column < kVgaWidth; column++) {
+  for (unsigned column = 0; column < kVgaWidth; column++) {
     vga_place_character(' ', vga_color_palette, row, column);
   }
 }
@@ -64,7 +64,7 @@ void vga_reposition() {
     const int bytesToScroll = overhang * kVgaWidth * sizeof(VgaCharacter);
     memmove((void *) kVgaBuffer, (void *) (kVgaBuffer + bytesToScroll),
 	    kVgaWidth * kVgaHeight * sizeof(VgaCharacter) - bytesToScroll);
-    for (int row = kVgaHeight - overhang; row < kVgaHeight; row++) {
+    for (unsigned row = kVgaHeight - overhang; row < kVgaHeight; row++) {
       vga_erase_row(row);
     }
     vga_row = kVgaHeight - 1;
