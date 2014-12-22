@@ -5,5 +5,6 @@
 
 void * memmove(void *dest, const void *src, size_t count);
 size_t strlen(const char *string);
+char * strrev(char *string);
 
 #endif  // ASBESTOS_STRING_H_
