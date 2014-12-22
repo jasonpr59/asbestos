@@ -38,9 +38,12 @@ void vga_demo_scroll() {
 
 void kernel_initialize() {
   vga_initialize();
-  vga_write_string("Starting up Asbestos.");
   // TODO(jasonpr): Remove this demo once scrolling is well-established.
   vga_demo_scroll();
+  cprintf("Starting up Asbestos.\n");
+  cprintf("The hex number %x is twenty.\n", 20);
+  cprintf("The word '%5s' means '%15s' in Spanish.\n",
+	  "hola", "hello");
 }
 
 void kernel_main() {
