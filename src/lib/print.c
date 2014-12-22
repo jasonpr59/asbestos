@@ -93,7 +93,7 @@ struct EscapeFlags escape_flags(char **format_stream) {
 // Emit the data for the current escape sequence, partly consuming the
 // format and data streams.
 void emit_datum(void (*emit)(char), char **format_stream,
-		va_list data_stream) {
+		va_list *data_stream) {
   if (**format_stream == '%') {
     // It's just an escaped percent sign.
     emit('%');
@@ -103,13 +103,13 @@ void emit_datum(void (*emit)(char), char **format_stream,
   struct EscapeFlags flags = escape_flags(format_stream);
   if (flags.conversion == 'x') {
     // Emit as hex.
-    unsigned value = va_arg(data_stream, unsigned);
+    unsigned value = va_arg(*data_stream, unsigned);
     for (int i = 0; i < flags.length; i++) {
       emit('x');
     }
   } else if (flags.conversion == 's') {
     // Emit string.
-    char *string = va_arg(data_stream, char *);
+    char *string = va_arg(*data_stream, char *);
     int data_length = strlen(string);
     int padding_size = flags.length - data_length;
     for (int i = 0; i < padding_size; i++) {
@@ -128,7 +128,7 @@ void emit_formatted_var(void (*emit)(char), char *format, va_list data) {
   while (*next_char) {
     if (*next_char == '%') {
       next_char++;
-      emit_datum(emit, &next_char, data);
+      emit_datum(emit, &next_char, &data);
       continue;
     }
     emit(*next_char++);
