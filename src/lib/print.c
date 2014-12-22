@@ -64,9 +64,6 @@ static const int kMaxFormatLength = 2;
 // the escape sequence.
 struct EscapeFlags escape_flags(char **format_stream) {
   struct EscapeFlags flags;
-  char length_buffer[kMaxFormatLength + 1];
-  consume_number(format_stream, length_buffer, kMaxFormatLength);
-  flags.length = string_to_int(length_buffer);
   // If the next character is a space or a zero, then it specifies the
   // fill character.
   if (**format_stream == ' ') {
@@ -78,6 +75,10 @@ struct EscapeFlags escape_flags(char **format_stream) {
   } else {
     flags.fill_character = ' ';
   }
+
+  char length_buffer[kMaxFormatLength + 1];
+  consume_number(format_stream, length_buffer, kMaxFormatLength);
+  flags.length = string_to_int(length_buffer);
 
   // TODO(jasonpr): Determine the best place to validate the
   // conversion.  Probably here.
