@@ -102,6 +102,34 @@ void emit_padded_buffer(void (*emit)(char), char *buffer, char filler,
   }
 }
 
+static char hex_digit(int digit) {
+  if (0 <= digit && digit <= 9) {
+    return '0' + digit;
+  }
+  return 'a' + digit - 10;
+}
+
+void fill_hex_buffer(char *buffer, unsigned value) {
+  if (value == 0) {
+    buffer[0] = '0';
+    buffer[1] = '\0';
+    return;
+  }
+
+  // We start out working on the 16^0's place.
+  int exponent = 0;
+  while (value != 0) {
+    int digit = value % 16;
+    value = (value - digit) / 16;
+    buffer[exponent++] = hex_digit(digit);
+  }
+  buffer[exponent] = '\0';
+  strrev(buffer);
+}
+
+// Assuming 32-bit numbers, we need 8 hex digits plus a null byte.
+static const size_t kHexBufferSize = 9;
+
 // Emit the data for the current escape sequence, partly consuming the
 // format and data streams.
 void emit_datum(void (*emit)(char), char **format_stream,
@@ -116,9 +144,9 @@ void emit_datum(void (*emit)(char), char **format_stream,
   if (flags.conversion == 'x') {
     // Emit as hex.
     unsigned value = va_arg(*data_stream, unsigned);
-    for (int i = 0; i < flags.length; i++) {
-      emit('x');
-    }
+    char hex_buffer[kHexBufferSize];
+    fill_hex_buffer(hex_buffer, value);
+    emit_padded_buffer(emit, hex_buffer, flags.fill_character, flags.length);
   } else if (flags.conversion == 's') {
     // Emit string.
     char *string = va_arg(*data_stream, char *);
