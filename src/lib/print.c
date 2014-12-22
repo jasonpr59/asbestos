@@ -74,6 +74,8 @@ struct EscapeFlags escape_flags(char **format_stream) {
   } else if (**format_stream == '0') {
     flags.fill_character = '0';
     (*format_stream)++;
+  } else {
+    flags.fill_character = ' ';
   }
 
   // TODO(jasonpr): Determine the best place to validate the
