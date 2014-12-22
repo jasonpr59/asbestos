@@ -102,26 +102,29 @@ void emit_padded_buffer(void (*emit)(char), char *buffer, char filler,
   }
 }
 
-static char hex_digit(int digit) {
+// Convert a number to a character digit..
+// The order of digits is "01...89ab...yz".
+// Behavior is undefined if digit > 35 or digit < 0.
+static char character_digit(int digit) {
   if (0 <= digit && digit <= 9) {
     return '0' + digit;
   }
   return 'a' + digit - 10;
 }
 
-void fill_hex_buffer(char *buffer, unsigned value) {
+void fill_buffer_with_radix(char *buffer, unsigned value, int radix) {
   if (value == 0) {
     buffer[0] = '0';
     buffer[1] = '\0';
     return;
   }
 
-  // We start out working on the 16^0's place.
+  // We start out working on the radix^0's place.
   int exponent = 0;
   while (value != 0) {
-    int digit = value % 16;
-    value = (value - digit) / 16;
-    buffer[exponent++] = hex_digit(digit);
+    int digit = value % radix;
+    value = (value - digit) / radix;
+    buffer[exponent++] = character_digit(digit);
   }
   buffer[exponent] = '\0';
   strrev(buffer);
@@ -129,6 +132,8 @@ void fill_hex_buffer(char *buffer, unsigned value) {
 
 // Assuming 32-bit numbers, we need 8 hex digits plus a null byte.
 static const size_t kHexBufferSize = 9;
+// We need 10 decimal digits plus a null byte.
+static const size_t kDecimalBufferSize = 11;
 
 // Emit the data for the current escape sequence, partly consuming the
 // format and data streams.
@@ -145,8 +150,15 @@ void emit_datum(void (*emit)(char), char **format_stream,
     // Emit as hex.
     unsigned value = va_arg(*data_stream, unsigned);
     char hex_buffer[kHexBufferSize];
-    fill_hex_buffer(hex_buffer, value);
+    fill_buffer_with_radix(hex_buffer, value, 16);
     emit_padded_buffer(emit, hex_buffer, flags.fill_character, flags.length);
+  } else if (flags.conversion == 'd') {
+    // Emit as decimal.
+    unsigned value = va_arg(*data_stream, unsigned);
+    char decimal_buffer[kDecimalBufferSize];
+    fill_buffer_with_radix(decimal_buffer, value, 10);
+    emit_padded_buffer(emit, decimal_buffer, flags.fill_character,
+		       flags.length);
   } else if (flags.conversion == 's') {
     // Emit string.
     char *string = va_arg(*data_stream, char *);

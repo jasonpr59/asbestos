@@ -3,7 +3,7 @@
 
 void vga_demo_scroll() {
   for (int i = 0; i < 30; i++) {
-    cprintf("Demo scroll, line 0x%02x.\n", i);
+    cprintf("Demo scroll, line % 2d (0x%02x).\n", i, i);
   }
 }
 
