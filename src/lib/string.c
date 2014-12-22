@@ -23,3 +23,12 @@ void* memmove(void *dest, const void *src, size_t count) {
   }
   return dest;
 }
+
+size_t strlen(const char *string) {
+  char *current = (char *) string;
+  int size = 0;
+  while (*current++) {
+    size++;
+  }
+  return size;
+}
