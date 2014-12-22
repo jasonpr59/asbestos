@@ -100,12 +100,6 @@ void emit_datum(void (*emit)(char), char **format_stream,
     return;
   }
   struct EscapeFlags flags = escape_flags(format_stream);
-  // Just for demo purposes.
-  // TODO(jasonpr): Remove.
-  if (flags.length == 0) {
-    flags.length = 10;
-  }
-
   if (flags.conversion == 'x') {
     // Emit as hex.
     unsigned value = va_arg(data_stream, unsigned);
