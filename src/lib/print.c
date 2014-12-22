@@ -89,6 +89,17 @@ struct EscapeFlags escape_flags(char **format_stream) {
   return flags;
 }
 
+void emit_padded_buffer(void (*emit)(char), char *buffer, char filler,
+			size_t fill_to) {
+  unsigned data_length = strlen(buffer);
+  int padding_size = fill_to - data_length;
+  for (int i = 0; i < padding_size; i++) {
+    emit(filler);
+  }
+  while (*buffer) {
+    emit(*buffer++);
+  }
+}
 
 // Emit the data for the current escape sequence, partly consuming the
 // format and data streams.
@@ -110,14 +121,7 @@ void emit_datum(void (*emit)(char), char **format_stream,
   } else if (flags.conversion == 's') {
     // Emit string.
     char *string = va_arg(*data_stream, char *);
-    int data_length = strlen(string);
-    int padding_size = flags.length - data_length;
-    for (int i = 0; i < padding_size; i++) {
-      emit(flags.fill_character);
-    }
-    while (*string) {
-      emit(*string++);
-    }
+    emit_padded_buffer(emit, string, flags.fill_character, flags.length);
   } else {
     // TODO(jasonpr): Throw an error.
   }
