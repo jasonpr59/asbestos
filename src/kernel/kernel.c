@@ -36,14 +36,20 @@ void vga_demo_scroll() {
   cprintf("Demo scroll, line 30.\n");
 }
 
+void demo_cprintf() {
+  cprintf("The hex number %x is twenty.\n", 20);
+  cprintf("The word '%5s' means '%15s' in Spanish.\n",
+	  "hola", "hello");
+  cprintf("The word '%s' means '%s' in Spanish.\n",
+	  "lapiz", "pencil");
+}
+
 void kernel_initialize() {
   vga_initialize();
   // TODO(jasonpr): Remove this demo once scrolling is well-established.
   vga_demo_scroll();
   cprintf("Starting up Asbestos.\n");
-  cprintf("The hex number %x is twenty.\n", 20);
-  cprintf("The word '%5s' means '%15s' in Spanish.\n",
-	  "hola", "hello");
+  demo_cprintf();
 }
 
 void kernel_main() {
