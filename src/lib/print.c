@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 #include "print.h"
 
 void emit_formatted(void (*emit)(char), char *format, ...) {
@@ -109,8 +110,13 @@ void emit_datum(void (*emit)(char), char **format_stream,
   } else if (flags.conversion == 's') {
     // Emit string.
     char *string = va_arg(data_stream, char *);
-    for (int i = 0; i < flags.length; i++) {
-      emit('s');
+    int data_length = strlen(string);
+    int padding_size = flags.length - data_length;
+    for (int i = 0; i < padding_size; i++) {
+      emit(flags.fill_character);
+    }
+    while (*string) {
+      emit(*string++);
     }
   } else {
     // TODO(jasonpr): Throw an error.
