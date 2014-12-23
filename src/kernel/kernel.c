@@ -1,3 +1,4 @@
+#include "backtrace.h"
 #include "cprintf.h"
 #include "vga.h"
 
@@ -21,6 +22,7 @@ void kernel_initialize() {
   vga_demo_scroll();
   cprintf("Starting up Asbestos.\n");
   demo_cprintf();
+  print_backtrace();
 }
 
 void kernel_main() {
