@@ -16,13 +16,26 @@ void demo_cprintf() {
 	  "lapiz", "pencil");
 }
 
+void demo_backtrace(int depth) {
+  if (depth <= 0) {
+    cprintf("Early backtrace:\n");
+    print_backtrace();
+    cprintf("\n");
+    cprintf("Late backtrace: \n");
+    print_backtrace();
+    cprintf("\n");
+  } else {
+    demo_backtrace(depth - 1);
+  }
+}
+
 void kernel_initialize() {
   vga_initialize();
   // TODO(jasonpr): Remove this demo once scrolling is well-established.
   vga_demo_scroll();
   cprintf("Starting up Asbestos.\n");
   demo_cprintf();
-  print_backtrace();
+  demo_backtrace(5);
 }
 
 void kernel_main() {
