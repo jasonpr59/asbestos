@@ -9,7 +9,19 @@
 // want our instruction wrapper functions to be inlined.  So, we mark
 // all of them with always_inline.
 
+static __inline uintptr_t get_ebp() __attribute__((always_inline));
 static __inline void outb(uint16_t io_port, uint8_t data) __attribute__((always_inline));
+
+// Get the current base pointer.
+
+// This wil be the base pointer of the calling function, because
+// get_ebp() is always inlined.
+static uintptr_t get_ebp() {
+  uintptr_t ebp;
+  __asm __volatile("mov %%ebp, %0" :
+		   "=r" (ebp));
+  return ebp;
+}
 
 // The OUTB instruction constrains which registers we use.
 // See http://x86.renejeschke.de/html/file_module_x86_id_222.html.

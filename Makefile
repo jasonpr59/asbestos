@@ -22,6 +22,7 @@ DEPFILES := $(patsubst %.c, %.d,$(CSOURCES))
 # Setup object files.
 FLAGS := -ffreestanding -O1 -g
 CCFLAGS := $(FLAGS) -std=c99 -Wall -Wextra -I$(LIBDIR)
+CCFLAGS += -fno-omit-frame-pointer
 LDFLAGS := $(FLAGS) -nostdlib
 
 OBJDIR := obj
