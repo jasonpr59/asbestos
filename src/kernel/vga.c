@@ -95,7 +95,13 @@ void vga_write_newline() {
 }
 
 void vga_write(char character) {
-  // Write the character.
+  // Handle special characters specially.
+  if (character == '\n') {
+    vga_write_newline();
+    return;
+  }
+
+  // Write the non-special character.
   vga_place_character(character, vga_color_palette, vga_row, vga_column);
   // Advance the cursor.
   vga_column++;
