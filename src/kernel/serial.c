@@ -1,9 +1,18 @@
+// This file implements serial communication via a UART like the 8250
+// or 16550.
+
+// Some good resources include:
+// http://pdf1.alldatasheet.com/datasheet-pdf/view/89961/NSC/INS8250/+5J873UKPC/1pOuCtzB+/datasheet.pdf
+// www.ti.com/lit/ds/symlink/pc16550d.pdf
+// www.sci.muni.cz/docs/pc/serport.txt
+// wiki.osdev.org/Serial_Ports
+
+
 #include <stdbool.h>
 #include <x86.h>
 #include "serial.h"
 
 #define COM1_IO_PORT 0x3f8
-
 
 // The next two constants are valid when DLAB = 0.
 #define UART_DATA_IO_PORT (COM1_IO_PORT + 0)
