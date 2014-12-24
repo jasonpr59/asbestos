@@ -1,5 +1,6 @@
 #include "backtrace.h"
 #include "cprintf.h"
+#include "serial.h"
 #include "vga.h"
 
 void vga_demo_scroll() {
@@ -30,6 +31,7 @@ void demo_backtrace(int depth) {
 }
 
 void kernel_initialize() {
+  serial_initialize();
   vga_initialize();
   // TODO(jasonpr): Remove this demo once scrolling is well-established.
   vga_demo_scroll();

@@ -10,6 +10,7 @@
 // all of them with always_inline.
 
 static __inline uintptr_t get_ebp() __attribute__((always_inline));
+static __inline uint8_t inb(uint16_t io_port) __attribute__((always_inline));
 static __inline void outb(uint16_t io_port, uint8_t data) __attribute__((always_inline));
 
 // Get the current base pointer.
@@ -21,6 +22,14 @@ static uintptr_t get_ebp() {
   __asm __volatile("mov %%ebp, %0" :
 		   "=r" (ebp));
   return ebp;
+}
+
+static uint8_t inb(uint16_t io_port) {
+  uint8_t data;
+  __asm __volatile("inb %1, %0" :
+		   "=a" (data) :
+		   "d" (io_port));
+  return data;
 }
 
 // The OUTB instruction constrains which registers we use.

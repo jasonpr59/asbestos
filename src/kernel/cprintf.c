@@ -1,10 +1,12 @@
 #include <stdarg.h>
 #include <print.h>
 #include "cprintf.h"
+#include "serial.h"
 #include "vga.h"
 
 void print_char(char character) {
   vga_write(character);
+  serial_write(character);
 }
 
 void cprintf(char *format, ...) {
