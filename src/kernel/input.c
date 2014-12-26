@@ -1,4 +1,5 @@
 #include <read.h>
+#include "cprintf.h"
 #include "input.h"
 #include "keyboard.h"
 
