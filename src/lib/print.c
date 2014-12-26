@@ -163,6 +163,10 @@ void emit_datum(void (*emit)(char), char **format_stream,
     // Emit string.
     char *string = va_arg(*data_stream, char *);
     emit_padded_buffer(emit, string, flags.fill_character, flags.length);
+  } else if (flags.conversion == 'c') {
+    // Emit character.
+    char character = (char) va_arg(*data_stream, int);
+    emit(character);
   } else {
     // TODO(jasonpr): Throw an error.
   }
