@@ -4,7 +4,7 @@
 #include "serial.h"
 #include "vga.h"
 
-void print_char(char character) {
+void cprint_char(char character) {
   vga_write(character);
   serial_write(character);
 }
@@ -12,5 +12,5 @@ void print_char(char character) {
 void cprintf(char *format, ...) {
   va_list data;
   va_start(data, format);
-  emit_formatted_var(print_char, format, data);
+  emit_formatted_var(cprint_char, format, data);
 }
