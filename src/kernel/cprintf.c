@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <print.h>
 #include "cprintf.h"
+#include "panic.h"
 #include "serial.h"
 #include "vga.h"
 
@@ -16,5 +17,7 @@ void cprintf(char *format, ...) {
 }
 
 void cprintf_var(char *format, va_list data) {
-  emit_formatted_var(cprint_char, format, data);
+  if (emit_formatted_var(cprint_char, format, data)) {
+    panic("Invalid format string: \"%s\".\n", format);
+  }
 }

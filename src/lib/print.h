@@ -8,7 +8,7 @@
 // they will grow similar to the standard functions, with time.
 //  TODO(jasonpr): Make these functions conform to standards.
 
-void emit_formatted(void (*emit)(char), char *format, ...);
-void emit_formatted_var(void (*emit)(char), char *format, va_list data);
+int emit_formatted(void (*emit)(char), char *format, ...);
+int emit_formatted_var(void (*emit)(char), char *format, va_list data);
 
 #endif  // CPRINTF_H_

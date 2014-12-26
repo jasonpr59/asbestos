@@ -3,11 +3,12 @@
 #include <string.h>
 #include "print.h"
 
-void emit_formatted(void (*emit)(char), char *format, ...) {
+int emit_formatted(void (*emit)(char), char *format, ...) {
   va_list data;
   va_start(data, format);
-  emit_formatted_var(emit, format, data);
+  int result = emit_formatted_var(emit, format, data);
   va_end(data);
+  return result;
 }
 
 // Return whether a character is one of the ten decimal digits.
@@ -137,13 +138,13 @@ static const size_t kDecimalBufferSize = 11;
 
 // Emit the data for the current escape sequence, partly consuming the
 // format and data streams.
-void emit_datum(void (*emit)(char), char **format_stream,
+int emit_datum(void (*emit)(char), char **format_stream,
 		va_list *data_stream) {
   if (**format_stream == '%') {
     // It's just an escaped percent sign.
     emit('%');
     (*format_stream)++;
-    return;
+    return 0;
   }
   struct EscapeFlags flags = escape_flags(format_stream);
   if (flags.conversion == 'x') {
@@ -168,18 +169,24 @@ void emit_datum(void (*emit)(char), char **format_stream,
     char character = (char) va_arg(*data_stream, int);
     emit(character);
   } else {
-    // TODO(jasonpr): Throw an error.
+    return -1;
   }
+  return 0;
 }
 
-void emit_formatted_var(void (*emit)(char), char *format, va_list data) {
+int emit_formatted_var(void (*emit)(char), char *format, va_list data) {
   char *next_char = format;
   while (*next_char) {
     if (*next_char == '%') {
       next_char++;
-      emit_datum(emit, &next_char, &data);
-      continue;
+      int result;
+      if ((result = emit_datum(emit, &next_char, &data))) {
+	// A non-zero result is an error.
+	return result;
+      }
+    } else {
+      emit(*next_char++);
     }
-    emit(*next_char++);
   }
+  return 0;
 }  
