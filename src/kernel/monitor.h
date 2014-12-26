@@ -1,0 +1,6 @@
+#ifndef ASBESTOS_KERNEL_MONITOR_H_
+#define ASBESTOS_KERNEL_MONITOR_H_
+
+void run_monitor();
+
+#endif  // ASBESTOS_KERNEL_MONITOR_H_
