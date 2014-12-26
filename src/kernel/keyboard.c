@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <x86.h>
 #include "cprintf.h"
+#include "panic.h"
 #include "keyboard.h"
 
 
@@ -101,8 +102,7 @@ void keyboard_self_test() {
   keyboard_write_command(KEYBOARD_SELF_TEST_COMMAND);
   char self_test_result = keyboard_read_data();
   if (self_test_result != KEYBOARD_SELF_TEST_EXPECTED_RESULT) {
-    // TODO(jasonpr): Panic.
-    cprintf("[KEYBOARD] Error: Failed self test.\n");
+    panic("[KEYBOARD] Failed self test.\n");
   }
 }
 
@@ -110,8 +110,7 @@ void keyboard_interface_test() {
   keyboard_write_command(KEYBOARD_INTERFACE_TEST_COMMAND);
   char interface_test_result = keyboard_read_data();
   if (interface_test_result != KEYBOARD_INTERFACE_TEST_EXPECTED_RESULT) {
-    // TODO(jasonpr): Panic.
-    cprintf("[KEYBOARD] Error: Failed interface test.\n");
+    panic("[KEYBOARD] Failed interface test.\n");
   }
 }
 
