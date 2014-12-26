@@ -1,6 +1,6 @@
 #include "backtrace.h"
 #include "cprintf.h"
-#include "input.h"
+#include "monitor.h"
 #include "keyboard.h"
 #include "serial.h"
 #include "vga.h"
@@ -32,15 +32,6 @@ void demo_backtrace(int depth) {
   }
 }
 
-void run_echo_prompt() {
-  char prompt[100];
-  while (1) {
-    cprintf("Asbestos Kernel Prompt $ ");
-    input_string(prompt, 100);
-    cprintf(prompt);
-  }
-}
-
 void kernel_initialize() {
   serial_initialize();
   vga_initialize();
@@ -50,9 +41,9 @@ void kernel_initialize() {
   cprintf("Starting up Asbestos.\n");
   demo_cprintf();
   demo_backtrace(5);
-  run_echo_prompt();
 }
 
 void kernel_main() {
   kernel_initialize();
+  run_monitor();
 }
