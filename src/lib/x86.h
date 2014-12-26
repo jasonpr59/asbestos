@@ -39,4 +39,16 @@ static void outb(uint16_t io_port, uint8_t data) {
 		   /* No output. */ : 
 		   "a" (data), "d" (io_port));
 }
+
+struct PushedRegisters {
+  uint32_t edi;
+  uint32_t esi;
+  uint32_t ebp;
+  uint32_t esp;
+  uint32_t ebx;
+  uint32_t edx;
+  uint32_t ecx;
+  uint32_t eax;
+};
+
 #endif  // X86_H_
