@@ -4,14 +4,14 @@
 #include "serial.h"
 #include "vga.h"
 
-void kernel_initialize() {
+void kernel_initialize_terminal() {
   serial_initialize();
   vga_initialize();
   keyboard_initialize();
-  cprintf("Starting up Asbestos.\n");
 }
 
 void kernel_main() {
-  kernel_initialize();
+  kernel_initialize_terminal();
+  cprintf("Starting up Asbestos.\n");
   run_monitor();
 }
