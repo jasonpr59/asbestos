@@ -12,5 +12,9 @@ void cprint_char(char character) {
 void cprintf(char *format, ...) {
   va_list data;
   va_start(data, format);
+  cprintf_var(format, data);
+}
+
+void cprintf_var(char *format, va_list data) {
   emit_formatted_var(cprint_char, format, data);
 }
