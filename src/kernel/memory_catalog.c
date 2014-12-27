@@ -1,3 +1,4 @@
+#include <memory.h>
 #include "boot_allocator.h"
 #include "cprintf.h"
 #include "link_address.h"
@@ -50,8 +51,8 @@ void memory_catalog_free_page(struct MemoryCatalogBlock *block) {
 }
 
 void memory_catalog_initialize(struct MultibootInfo *multiboot_info) {
-  next_unused_block =
-      (struct MemoryCatalogBlock *) boot_allocate(8 * 1024 * 1024);
+  next_unused_block = (struct MemoryCatalogBlock *)
+    boot_allocate(sizeof(struct MemoryCatalogBlock) * kPagesPerMemorySpace);
 
   int memory_size_kibibytes = (multiboot_info->mem_lower +
 			       multiboot_info->mem_upper);
