@@ -41,6 +41,20 @@ void catalog_memory_range(uintptr_t base_address, size_t length) {
   }
 }
 
+struct MemoryCatalogBlock *memory_catalog_allocate_page() {
+  if (!free_list) {
+    panic("Ran out of pages.\n");
+  }
+  struct MemoryCatalogBlock *block = free_list;
+  free_list = block->next;
+  return block;
+}
+
+void memory_catalog_free_page(struct MemoryCatalogBlock *block) {
+  block->next = free_list;
+  free_list = block;
+}
+
 void memory_catalog_initialize(struct MultibootInfo *multiboot_info) {
   int memory_size_kibibytes = (multiboot_info->mem_lower +
 			       multiboot_info->mem_upper);

@@ -12,5 +12,7 @@ struct MemoryCatalogBlock {
 };
 
 void memory_catalog_initialize(struct MultibootInfo *multiboot_info);
+struct MemoryCatalogBlock *memory_catalog_allocate_page();
+void memory_catalog_free_page(struct MemoryCatalogBlock *block);
 
 #endif  // ASBESTOS_KERNEL_MEMORY_CATALOG_H_
