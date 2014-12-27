@@ -56,7 +56,7 @@ kernel: $(KERNIMG)
 clean:
 	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG) $(KERNASM)
 
-QEMU := qemu-system-i386 -kernel $(KERNIMG) -serial mon:stdio
+QEMU := qemu-system-i386 -kernel $(KERNIMG) -serial mon:stdio -m 3G
 qemu: kernel
 	$(QEMU)
 
