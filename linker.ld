@@ -37,12 +37,13 @@ SECTIONS
 	}
 
 	. = ALIGN(4K);
-	/* The mem_catalog chunk of memory is set aside for holding
-	the memory catalog, which will allow us to track the rest of
-	the system's memory dynamically. */
-	PROVIDE(mem_catalog_start = .);
+
+	/* The boot heap is a contiguous region of memory from which
+	we allocate memory until we set up our real, page-table aware
+	allocator. */
+	PROVIDE(boot_heap_start = .);
 	. += 8M;
-	PROVIDE(mem_catalog_end = .);
+	PROVIDE(boot_heap_end = .);
 
 	PROVIDE(kernel_end = .);
 }

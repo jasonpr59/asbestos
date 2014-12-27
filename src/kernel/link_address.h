@@ -4,9 +4,10 @@
 extern const char  kernel_start[];
 extern const char kernel_end[];
 
-// This pre-allocated chunk of memory holds data for tracking the rest
-// of the system's available memory.
-extern const char mem_catalog_start[];
-extern const char mem_catalog_end[];
+// This pre-allocated chunk of memory allows us to provide a bootstrap
+// allocator, even before we have a real, page-table aware allocator
+// setup.
+extern const char boot_heap_start[];
+extern const char boot_heap_end[];
 
 #endif  // ASBESTOS_KERNEL_LINK_ADDRESS_H_

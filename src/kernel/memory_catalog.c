@@ -1,3 +1,4 @@
+#include "boot_allocator.h"
 #include "cprintf.h"
 #include "link_address.h"
 #include "memory_catalog.h"
@@ -9,8 +10,7 @@
 static struct MemoryCatalogBlock *free_list = NULL;
 
 // Only used during initialization.
-static struct MemoryCatalogBlock *next_unused_block =
-    (struct MemoryCatalogBlock *) mem_catalog_start;
+static struct MemoryCatalogBlock *next_unused_block;
 
 void catalog_memory_block(uintptr_t address) {
   if (address >= (uintptr_t) kernel_start
@@ -24,12 +24,6 @@ void catalog_memory_block(uintptr_t address) {
   // Push it onto the free list.
   block->next = free_list;
   free_list = block;
-}
-
-// Rounds an address up to a block boundary.
-// Requires that the block size is a power of two.
-uintptr_t aligned_up(uintptr_t address, size_t block_size) {
-  return (address + block_size - 1) & ~(block_size - 1);
 }
 
 // Adds a range of memory to the free list.
@@ -56,6 +50,9 @@ void memory_catalog_free_page(struct MemoryCatalogBlock *block) {
 }
 
 void memory_catalog_initialize(struct MultibootInfo *multiboot_info) {
+  next_unused_block =
+      (struct MemoryCatalogBlock *) boot_allocate(8 * 1024 * 1024);
+
   int memory_size_kibibytes = (multiboot_info->mem_lower +
 			       multiboot_info->mem_upper);
   cprintf("Found %dMB of usable RAM.\n", memory_size_kibibytes / 1024);
