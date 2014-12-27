@@ -6,6 +6,7 @@ SECTIONS
 {
 	/* Start loading sections at 1MiB. This is conventional. */
 	. = 1M;
+	PROVIDE(kernel_start = .);
 
 	/* Put multiboot header first, to ensure the bootloader
 	   recognizes it. */
@@ -34,4 +35,14 @@ SECTIONS
 		*(.bss)
 		*(.bootstrap_stack)
 	}
+
+	. = ALIGN(4K);
+	/* The mem_catalog chunk of memory is set aside for holding
+	the memory catalog, which will allow us to track the rest of
+	the system's memory dynamically. */
+	PROVIDE(mem_catalog_start = .);
+	. += 16M;
+	PROVIDE(mem_catalog_end = .);
+
+	PROVIDE(kernel_end = .);
 }
