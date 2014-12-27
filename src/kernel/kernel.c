@@ -1,6 +1,7 @@
 #include <x86.h>
 #include "cprintf.h"
 #include "link_address.h"
+#include "memory_catalog.h"
 #include "monitor.h"
 #include "multiboot.h"
 #include "panic.h"

@@ -1,6 +1,8 @@
 #ifndef ASBESTOS_KERNEL_MULTIBOOT_H_
 #define ASBESTOS_KERNEL_MULTIBOOT_H_
 
+#include <stdint.h>
+
 // The names in this file are chosen to conform to those in GNU
 // multiboot documentation at
 // http://www.gnu.org/software/grub/manual/multiboot/multiboot.html
