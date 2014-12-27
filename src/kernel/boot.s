@@ -32,10 +32,11 @@ stack_start:
 .global _start
 .type _start, @function
 _start:
-	// Indicate that this is the base stack frame.
-	mov $0, %ebp
 	movl $stack_start, %esp
 	# The C-code entry point will be kernel_main()
+	pushal
+	// Indicate that this is the base stack frame.
+	mov $0, %ebp
 	call kernel_main
 	# If we mistakenly return, just loop endlessly.
 	cli
