@@ -19,7 +19,6 @@ void catalog_memory_block(uintptr_t address) {
     // allocation system.
     return;
   }
-  cprintf(".");
   struct MemoryCatalogBlock *block = next_unused_block++;
   block->address = address;
   // Push it onto the free list.
