@@ -41,7 +41,7 @@ SECTIONS
 	the memory catalog, which will allow us to track the rest of
 	the system's memory dynamically. */
 	PROVIDE(mem_catalog_start = .);
-	. += 16M;
+	. += 8M;
 	PROVIDE(mem_catalog_end = .);
 
 	PROVIDE(kernel_end = .);
