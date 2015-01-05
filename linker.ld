@@ -36,8 +36,15 @@ SECTIONS
 		*(.bootstrap_stack)
 	}
 
-	. = ALIGN(4K);
+	/* STAB entries. */
+	.stab BLOCK(4K) : ALIGN(4K)
+	{
+		stab_entries_start = .;
+		*(.stab);
+		stab_entries_end = .;
+	}
 
+	. = ALIGN(4K);
 	/* The boot heap is a contiguous region of memory from which
 	we allocate memory until we set up our real, page-table aware
 	allocator. */

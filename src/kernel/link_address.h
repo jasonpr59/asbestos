@@ -10,4 +10,7 @@ extern const char kernel_end[];
 extern const char boot_heap_start[];
 extern const char boot_heap_end[];
 
+extern const char stab_entries_start[];
+extern const char stab_entries_end[];
+
 #endif  // ASBESTOS_KERNEL_LINK_ADDRESS_H_
