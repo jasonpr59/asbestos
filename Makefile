@@ -1,6 +1,8 @@
 # Setup toolchain.
 GCCPREFIX := "i686-elf-"
 CC := $(GCCPREFIX)gcc
+# Use gcc for linking, as the OSDev wiki recommends.
+LD := $(GCCPREFIX)gcc
 OBJDUMP := $(GCCPREFIX)objdump
 AS := $(GCCPREFIX)as
 
@@ -23,7 +25,7 @@ DEPFILES := $(patsubst %.c, %.d,$(CSOURCES))
 FLAGS := -ffreestanding -O1 -g
 CCFLAGS := $(FLAGS) -std=c99 -Wall -Wextra -I$(LIBDIR)
 CCFLAGS += -fno-omit-frame-pointer
-LDFLAGS := $(FLAGS) -nostdlib
+LDFLAGS := $(FLAGS) -nostdlib -Wl,-M
 
 OBJDIR := obj
 ASMOBJS := $(patsubst $(SRCDIR)/%.s,$(OBJDIR)/%.o,$(ASMSOURCES))
@@ -43,10 +45,11 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.s
 KERNIMG := asbestos.bin
 KERNASM := $(KERNIMG).asm
 LDSCRIPT := linker.ld
+LDMAP := asbestos.map
 
 $(KERNIMG): $(ALLOBJS)
 	@echo $(ALLOBJS)
-	$(CC) -T $(LDSCRIPT) -o $@  $(LDFLAGS) $(ALLOBJS) -lgcc
+	$(LD) -T $(LDSCRIPT) -o $@  $(LDFLAGS) $(ALLOBJS) -lgcc > $(LDMAP)
 	$(OBJDUMP) -S $@ > $(KERNASM)
 
 # Setup high-level targets.
@@ -54,7 +57,7 @@ $(KERNIMG): $(ALLOBJS)
 kernel: $(KERNIMG)
 
 clean:
-	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG) $(KERNASM)
+	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG) $(KERNASM) $(LDMAP)
 
 QEMU := qemu-system-i386 -kernel $(KERNIMG) -serial mon:stdio -m 3G
 qemu: kernel
