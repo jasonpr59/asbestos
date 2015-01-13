@@ -10,26 +10,26 @@ SECTIONS
 
 	/* Put multiboot header first, to ensure the bootloader
 	   recognizes it. */
-	.text BLOCK(4K) : ALIGN(4K)
+	.text BLOCK(4K) :
 	{
 		*(.multiboot)
 		*(.text)
 	}
 
 	/* Read-only data. */
-	.rodata BLOCK(4K) : ALIGN(4K)
+	.rodata BLOCK(4K) :
 	{
 		*(.rodata)
 	}
 
 	/* Read-write data (initialized). */
-	.data BLOCK(4K) : ALIGN(4K)
+	.data BLOCK(4K) :
 	{
 		*(.data)
 	}
 
 	/* Read-write data (uninitialized) and stack. */
-	.bss BLOCK(4K) : ALIGN(4K)
+	.bss BLOCK(4K) :
 	{
 		*(.COMMON)
 		*(.bss)
@@ -37,7 +37,7 @@ SECTIONS
 	}
 
 	/* STAB entries. */
-	.stab BLOCK(4K) : ALIGN(4K)
+	.stab BLOCK(4K) :
 	{
 		stab_entries_start = .;
 		*(.stab);
