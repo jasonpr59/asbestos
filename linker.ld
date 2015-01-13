@@ -40,8 +40,28 @@ SECTIONS
 	.stab BLOCK(4K) :
 	{
 		stab_entries_start = .;
-		*(.stab);
+		*(.stab)
 		stab_entries_end = .;
+
+		/* Force the linker to load/allocate this section.  By
+		default, normal ELF loaders, including bootloaders,
+		decline to load this data into memory, and leave the
+		data to be loaded only by the debugger.  But, we want
+		to load the STAB data, so the kernel produce nice
+		backtraces of itself. */
+		BYTE(0);
+	}
+
+	/* STAB strings. */
+	.stabstr BLOCK(4K) :
+	{
+		stab_strings_start = .;
+		*(.stabstr)
+		stab_strings_end = .;
+
+		/* As with the .stab section, force the linker to
+		load/allocate this section. */
+		BYTE(0);
 	}
 
 	. = ALIGN(4K);
