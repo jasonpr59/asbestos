@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define STAB_TYPE_FUNCTION 0x24
+
 struct StabEntry {
   uint32_t string_offset;
   uint8_t type;
