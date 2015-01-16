@@ -14,4 +14,6 @@ struct StabEntry {
 // Lookup the index'th stab entry.
 struct StabEntry *stab_entry(int index);
 
+char *stab_string(struct StabEntry *entry);
+
 #endif  // ASBESTOS_KERNEL_STABS_H_
