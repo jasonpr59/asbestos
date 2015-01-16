@@ -13,6 +13,9 @@ struct StabEntry {
   uintptr_t value;
 } __attribute__((packed));
 
+// Get the number of stab entries.
+int stab_count();
+
 // Lookup the index'th stab entry.
 struct StabEntry *stab_entry(int index);
 

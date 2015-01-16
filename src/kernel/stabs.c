@@ -7,10 +7,12 @@ static const char *kEmptyString = "";
 
 struct StabEntry *stab_entries = (struct StabEntry *) stab_entries_start;
 
+int stab_count() {
+  return (stab_entries_end - stab_entries_start) / sizeof(struct StabEntry);
+}
+
 struct StabEntry *stab_entry(int index) {
-  int stab_size = ((stab_entries_end - stab_entries_start)
-		   / sizeof(struct StabEntry));
-  if (index >= stab_size) {
+  if (index >= stab_count()) {
     panic("STAB index out of bounds.\n");
   }
 
