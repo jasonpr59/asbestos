@@ -7,8 +7,20 @@ static const char *kEmptyString = "";
 
 struct StabEntry *stab_entries = (struct StabEntry *) stab_entries_start;
 
+void stab_init() {
+
+}
+
 int stab_count() {
   return (stab_entries_end - stab_entries_start) / sizeof(struct StabEntry);
+}
+
+int stab_count_typed(StabType type) {
+  int count_builder = 0;
+  for (int i = 0; i < stab_count(); i++) {
+    count_builder += (stab_entry(i)->type == type);
+  }
+  return count_builder;
 }
 
 struct StabEntry *stab_entry(int index) {

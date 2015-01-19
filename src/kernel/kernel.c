@@ -7,6 +7,7 @@
 #include "panic.h"
 #include "keyboard.h"
 #include "serial.h"
+#include "stabs.h"
 #include "vga.h"
 
 void kernel_initialize_terminal() {
@@ -32,6 +33,18 @@ void kernel_validate_multiboot_handoff(uint32_t handoff_eax,
   cprintf("Multiboot handoff completed successfully.\n");
 }
 
+void kernel_demo_stabs() {
+  cprintf("\nThere are %d STAB entries.\n", stab_count());
+  cprintf("The functions in the STAB are:\n");
+  for (int i = 0; i < stab_count(); i++) {
+    struct StabEntry *entry = stab_entry(i);
+    cprintf("%08x   %02x   %04x %s\n",
+	    entry->value, entry->type,
+	    entry->description, stab_string(entry));
+  }
+  cprintf("\n");
+}
+
 void kernel_main(struct PushedRegisters registers) {
   kernel_initialize_terminal();
   cprintf("Starting up Asbestos.\n");
@@ -39,6 +52,8 @@ void kernel_main(struct PushedRegisters registers) {
   struct MultibootInfo *multiboot_info = (struct MultibootInfo *) registers.ebx;
   kernel_validate_multiboot_handoff(registers.eax, multiboot_info);
   memory_catalog_initialize(multiboot_info);
+
+  kernel_demo_stabs();
 
   run_monitor();
 }
