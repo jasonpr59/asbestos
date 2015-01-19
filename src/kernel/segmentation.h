@@ -2,6 +2,7 @@
 #define ASBESTOS_KERNEL_SEGMENT_H_
 
 #include <stdint.h>
+#include <x86.h>
 
 // Useful resources:
 // http://www.intel.com/design/pentium/manuals/24143004.pdf
@@ -39,15 +40,11 @@ struct SegmentDescriptor {
   uint8_t base_31_24;
 } __attribute__((packed));
 
-struct SegmentSelector {
-  // What privileges the CPU must require to use this segment.
-  // If the referenced descriptor has a stricter privilege level,
-  // then that constraint will be enforced instead.
-  unsigned int requested_privilege_level : 2;
-  // Which table contains the segment. 0 = GDT, 1 = LDT.
-  unsigned int local : 1;
-  // The index into the descriptor table.
-  unsigned int index : 13;
-} __attribute__((packed));
+#define GDT_SIZE 3
+#define GDT_NULL_SEGMENT_OFFSET 0
+#define GDT_CODE_SEGMENT_OFFSET 1
+#define GDT_DATA_SEGMENT_OFFSET 2
+
+void segmentation_initialize();
 
 #endif  // ASBESTOS_KERNEL_SEGMENT_H_
