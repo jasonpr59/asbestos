@@ -6,6 +6,7 @@
 #include "multiboot.h"
 #include "panic.h"
 #include "keyboard.h"
+#include "segmentation.h"
 #include "serial.h"
 #include "vga.h"
 
@@ -35,6 +36,9 @@ void kernel_validate_multiboot_handoff(uint32_t handoff_eax,
 void kernel_main(struct PushedRegisters registers) {
   kernel_initialize_terminal();
   cprintf("Starting up Asbestos.\n");
+
+  cprintf("Updating segmentation scheme.\n")
+  segmentation_initialize();
 
   struct MultibootInfo *multiboot_info = (struct MultibootInfo *) registers.ebx;
   kernel_validate_multiboot_handoff(registers.eax, multiboot_info);
