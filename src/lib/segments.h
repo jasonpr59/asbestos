@@ -1,6 +1,8 @@
 #ifndef ASBESTOS_LIB_SEGMENTS_H_
 #define ASBESTOS_LIB_SEGMENTS_H_
 
+#include <stdint.h>
+
 struct SegmentSelector {
   // What privileges the CPU must require to use this segment.
   // If the referenced descriptor has a stricter privilege level,
