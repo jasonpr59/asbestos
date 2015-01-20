@@ -24,7 +24,7 @@ struct SegmentDescriptor {
   // If set, it's a code segment.  If cleared, it's a data segment.
   unsigned int executable : 1;
   // If set, it's an LDT entry.  If cleared, it's a GDT entry.
-  unsigned int local : 1;
+  unsigned int non_system : 1;
   // DPL.  System is 0, user is 3.
   unsigned int privilege_level : 2;
   unsigned int present : 1;
