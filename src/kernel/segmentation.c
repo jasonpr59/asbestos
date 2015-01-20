@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <segments.h>
 #include <x86.h>
 #include "segmentation.h"
 

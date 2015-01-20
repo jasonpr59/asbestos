@@ -1,21 +1,10 @@
 #ifndef X86_H_
 #define X86_H_
 
+#include <segments.h>
 #include <stdint.h>
 
 // This file is heavily influenced by JOS's inc/x86.h.
-
-// TODO(jasonpr): Determine whether this belongs in another file.
-struct SegmentSelector {
-  // What privileges the CPU must require to use this segment.
-  // If the referenced descriptor has a stricter privilege level,
-  // then that constraint will be enforced instead.
-  unsigned int requested_privilege_level : 2;
-  // Which table contains the segment. 0 = GDT, 1 = LDT.
-  unsigned int local : 1;
-  // The index into the descriptor table.
-  unsigned int index : 13;
-} __attribute__((packed));
 
 // Usually, we discourage inlining via command line flags. But, we
 // want our instruction wrapper functions to be inlined.  So, we mark
