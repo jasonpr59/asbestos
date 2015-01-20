@@ -16,6 +16,8 @@ struct SegmentDescriptor spanning_gdt_entry(
       .limit_15_0 = 0xffff,
       .writable = writable,
       .executable = executable,
+      // TODO(jasonpr): Rename.
+      .local = true,
       .present = true,
       .limit_19_16 = 0xf,
       .granularity = true  // Multiply limit by 4KB.
