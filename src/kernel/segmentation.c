@@ -29,7 +29,11 @@ void initialize_gdt() {
   // Add a data segment.
   gdt[GDT_DATA_SEGMENT_OFFSET] = spanning_gdt_entry(true, false);
 
-  // TODO(jasonpr): Actually load the GDT!
+  struct PseudoDescriptor gdt_descriptor = {
+    .limit = sizeof(struct SegmentDescriptor) * GDT_SIZE - 1,
+    .base = (uintptr_t) &gdt
+  };
+  load_gdt(&gdt_descriptor);
 }
 
 void initialize_selectors() {
