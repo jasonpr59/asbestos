@@ -37,7 +37,7 @@ void kernel_main(struct PushedRegisters registers) {
   kernel_initialize_terminal();
   cprintf("Starting up Asbestos.\n");
 
-  cprintf("Updating segmentation scheme.\n")
+  cprintf("Updating segmentation scheme.\n");
   segmentation_initialize();
 
   struct MultibootInfo *multiboot_info = (struct MultibootInfo *) registers.ebx;
