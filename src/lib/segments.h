@@ -12,4 +12,10 @@ struct SegmentSelector {
   unsigned int index : 13;
 } __attribute__((packed));
 
+struct PseudoDescriptor {
+  uint16_t alignment_padding;
+  uint16_t limit;
+  uint32_t base;
+} __attribute__((aligned(4), packed));
+
 #endif  // ASBESTOS_LIB_SEGMENTS_H_
