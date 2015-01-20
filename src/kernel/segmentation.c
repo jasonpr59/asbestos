@@ -28,7 +28,11 @@ void initialize_gdt() {
   gdt[GDT_NULL_SEGMENT_OFFSET] = (struct SegmentDescriptor) {0};
 
   // Add a code segment.
-  gdt[GDT_CODE_SEGMENT_OFFSET] = spanning_gdt_entry(false, true);
+  // I can't find documentation that the code segment must be
+  // writeable.  But, it's the only way I can avoid a GP fault, and
+  // GRUB makes a writeable code segment, too.  So, it's probably
+  // okay!
+  gdt[GDT_CODE_SEGMENT_OFFSET] = spanning_gdt_entry(true, true);
 
   // Add a data segment.
   gdt[GDT_DATA_SEGMENT_OFFSET] = spanning_gdt_entry(true, false);
