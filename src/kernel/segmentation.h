@@ -40,10 +40,10 @@ struct SegmentDescriptor {
   uint8_t base_31_24;
 } __attribute__((packed));
 
-#define GDT_SIZE 3
 #define GDT_NULL_SEGMENT_OFFSET 0
 #define GDT_CODE_SEGMENT_OFFSET 1
 #define GDT_DATA_SEGMENT_OFFSET 2
+#define GDT_SIZE 3
 
 void segmentation_initialize();
 
