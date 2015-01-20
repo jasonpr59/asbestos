@@ -17,7 +17,7 @@ struct SegmentSelector {
 struct PseudoDescriptor {
   uint16_t alignment_padding;
   uint16_t limit;
-  uint32_t base;
+  uintptr_t base;
 } __attribute__((aligned(4), packed));
 
 uintptr_t pseudo_descriptor_gdt_address(struct PseudoDescriptor *pd);
