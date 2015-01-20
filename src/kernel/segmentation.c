@@ -4,6 +4,10 @@
 #include "segmentation.h"
 
 static struct SegmentDescriptor gdt[GDT_SIZE];
+static struct PseudoDescriptor gdt_descriptor = {
+  .limit = sizeof(struct SegmentDescriptor) * GDT_SIZE - 1,
+  .base = (uintptr_t) &gdt
+};
 
 // Make a segment that spans the whole 32-bit address space.
 struct SegmentDescriptor spanning_gdt_entry(
@@ -29,11 +33,8 @@ void initialize_gdt() {
   // Add a data segment.
   gdt[GDT_DATA_SEGMENT_OFFSET] = spanning_gdt_entry(true, false);
 
-  struct PseudoDescriptor gdt_descriptor = {
-    .limit = sizeof(struct SegmentDescriptor) * GDT_SIZE - 1,
-    .base = (uintptr_t) &gdt
-  };
-  load_gdt(&gdt_descriptor);
+  uintptr_t lgdt_target = pseudo_descriptor_gdt_address(&gdt_descriptor);
+  load_gdt(lgdt_target);
 }
 
 void initialize_selectors() {
