@@ -18,4 +18,6 @@ struct PseudoDescriptor {
   uint32_t base;
 } __attribute__((aligned(4), packed));
 
+uintptr_t pseudo_descriptor_gdt_address(struct PseudoDescriptor *pd);
+
 #endif  // ASBESTOS_LIB_SEGMENTS_H_
