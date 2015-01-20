@@ -20,6 +20,7 @@ struct SegmentDescriptor spanning_gdt_entry(
       .local = true,
       .present = true,
       .limit_19_16 = 0xf,
+      .default_size = 1, // Default to 32-bit operations.
       .granularity = true  // Multiply limit by 4KB.
   };
   return result;
