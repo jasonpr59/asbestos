@@ -34,9 +34,9 @@ struct SegmentDescriptor {
   unsigned int reserved : 1;
   // If set, operations in this segment default to 32-bit operations.
   // If cleared, they default to 16-bit operations.
-  unsigned int default_size : 1;
+  unsigned int default_size_32 : 1;
   // See the limit_* fields.
-  unsigned int granularity : 1;
+  unsigned int granularity_4k : 1;
   uint8_t base_31_24;
 } __attribute__((packed));
 
