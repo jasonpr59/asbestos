@@ -1,6 +1,7 @@
 #ifndef X86_H_
 #define X86_H_
 
+#include <segments.h>
 #include <stdint.h>
 
 // This file is heavily influenced by JOS's inc/x86.h.
@@ -12,6 +13,14 @@
 static __inline uintptr_t get_ebp() __attribute__((always_inline));
 static __inline uint8_t inb(uint16_t io_port) __attribute__((always_inline));
 static __inline void outb(uint16_t io_port, uint8_t data) __attribute__((always_inline));
+static __inline void load_cs(struct SegmentSelector selector) __attribute__((always_inline));
+static __inline void load_ds(struct SegmentSelector selector) __attribute__((always_inline));
+static __inline void load_es(struct SegmentSelector selector) __attribute__((always_inline));
+static __inline void load_fs(struct SegmentSelector selector) __attribute__((always_inline));
+static __inline void load_gs(struct SegmentSelector selector) __attribute__((always_inline));
+static __inline void load_ss(struct SegmentSelector selector) __attribute__((always_inline));
+static __inline void load_gdt(uintptr_t start) __attribute__((always_inline));
+
 
 // Get the current base pointer.
 
@@ -38,6 +47,58 @@ static void outb(uint16_t io_port, uint8_t data) {
   __asm __volatile("outb %0, %1" :
 		   /* No output. */ : 
 		   "a" (data), "d" (io_port));
+}
+
+static void load_cs(struct SegmentSelector selector) {
+  // Change the CS with a long return.
+  // Thanks to Owen at http://f.osdev.org/viewtopic.php?f=1&t=22641
+
+  // Pad the 16-bit selector to 32 bits so it can be pushed onto the
+  // stack.
+  uint32_t padded_selector = *((uint16_t *) &selector);
+
+  __asm __volatile("push %0\n\t"
+		   "push $flush_cs\n\t"
+		   "retf\n\t"
+		   "flush_cs:" :
+		   /* No output. */ :
+		   "r" (padded_selector));
+}
+
+static void load_ds(struct SegmentSelector selector) {
+  __asm __volatile("mov %0, %%ds" :
+		   /* No output. */ :
+		   "r" (selector));
+}
+
+static void load_es(struct SegmentSelector selector) {
+  __asm __volatile("mov %0, %%es" :
+		   /* No output. */ :
+		   "r" (selector));
+}
+
+static void load_fs(struct SegmentSelector selector) {
+  __asm __volatile("mov %0, %%fs" :
+		   /* No output. */ :
+		   "r" (selector));
+}
+
+static void load_gs(struct SegmentSelector selector) {
+  __asm __volatile("mov %0, %%gs" :
+		   /* No output. */ :
+		   "r" (selector));
+}
+
+static void load_ss(struct SegmentSelector selector) {
+  __asm __volatile("mov %0, %%ss" :
+		   /* No output. */ :
+		   "r" (selector));
+}
+
+static void load_gdt(uintptr_t start) {
+  __asm __volatile("lgdt (%0)" :
+		   /* No output. */ :
+		   "r" (start));
 }
 
 struct PushedRegisters {
