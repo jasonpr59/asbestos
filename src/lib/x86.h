@@ -21,6 +21,8 @@ static __inline void load_gs(struct SegmentSelector selector) __attribute__((alw
 static __inline void load_ss(struct SegmentSelector selector) __attribute__((always_inline));
 static __inline void load_gdt(struct PseudoDescriptor *gdt) __attribute__((always_inline));
 static __inline void load_idt(struct PseudoDescriptor *idt) __attribute__((always_inline));
+static __inline void enable_interrupts() __attribute__((always_inline));
+static __inline void disable_interrupts() __attribute__((always_inline));
 
 
 // Get the current base pointer.
@@ -106,6 +108,18 @@ static void load_idt(struct PseudoDescriptor *idt) {
   __asm __volatile("lidt (%0)" :
 		   /* No output. */ :
 		   "r" (pseudo_descriptor_address(idt)));
+}
+
+static void enable_interrupts() {
+  __asm __volatile("sti" :
+		   /* No output. */ :
+		   /* No input. */);
+}
+
+static void disable_interrupts() {
+  __asm __volatile("cli" :
+		   /* No output. */ :
+		   /* No input. */);
 }
 
 struct PushedRegisters {
