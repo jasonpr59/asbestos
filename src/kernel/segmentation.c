@@ -39,7 +39,7 @@ void initialize_gdt() {
   // Add a data segment.
   gdt[GDT_DATA_SEGMENT_OFFSET] = spanning_gdt_entry(true, false);
 
-  uintptr_t lgdt_target = pseudo_descriptor_gdt_address(&gdt_descriptor);
+  uintptr_t lgdt_target = pseudo_descriptor_address(&gdt_descriptor);
   load_gdt(lgdt_target);
 }
 
