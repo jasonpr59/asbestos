@@ -1,10 +1,14 @@
 #include <src/kernel/interrupts.h>
 
 trap_handler_0:
+	// Push dummy error code.
+	push $0
 	push $0
 	jmp call_handler
 
 trap_handler_1:
+	// Push dummy error code.
+	push $0
 	push $1
 	jmp call_handler
 
@@ -13,22 +17,32 @@ trap_handler_2:
 	jmp call_handler
 
 trap_handler_3:
+	// Push dummy error code.
+	push $0
 	push $3
 	jmp call_handler
 
 trap_handler_4:
+	// Push dummy error code.
+	push $0
 	push $4
 	jmp call_handler
 
 trap_handler_5:
+	// Push dummy error code.
+	push $0
 	push $5
 	jmp call_handler
 
 trap_handler_6:
+	// Push dummy error code.
+	push $0
 	push $6
 	jmp call_handler
 
 trap_handler_7:
+	// Push dummy error code.
+	push $0
 	push $7
 	jmp call_handler
 
@@ -37,6 +51,8 @@ trap_handler_8:
 	jmp call_handler
 
 trap_handler_9:
+	// Push dummy error code.
+	push $0
 	push $9
 	jmp call_handler
 
@@ -65,11 +81,14 @@ trap_handler_15:
 	jmp call_handler
 
 trap_handler_16:
+	// Push dummy error code.
+	push $0
 	push $16
 	jmp call_handler
 
 // Call the interrupt handler. Pass the trap frame as an argument.
 call_handler:
+	pushal
 	call handle_interrupt
 
 .align 4

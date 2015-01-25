@@ -2,6 +2,7 @@
 #include <x86.h>
 
 #include "interrupts.h"
+#include "cprintf.h"
 #include "panic.h"
 #include "segmentation.h"
 
@@ -22,8 +23,15 @@ struct InterruptDescriptor idt_entry(uintptr_t handler_pointer) {
   return result;
 }
 
-void handle_interrupt(int interrupt) {
-  switch (interrupt) {
+void print_trap_frame(struct TrapFrame *trap_frame) {
+  cprintf("Got trap %d from EIP 0x%08x.\n",
+	  trap_frame->interrupt_number, trap_frame->cpu_frame.eip);
+}
+
+void handle_interrupt(struct TrapFrame trap_frame) {
+  print_trap_frame(&trap_frame);
+
+  switch (trap_frame.interrupt_number) {
   case INTERRUPT_DIVIDE_ERROR:
     panic("Divide error.\n");
     break;
@@ -76,7 +84,7 @@ void handle_interrupt(int interrupt) {
     panic("Coprocessor error.\n");
     break;
   default:
-    panic("Unidentified interrupt: %d.\n", interrupt);
+    panic("Unidentified interrupt: %d.\n", trap_frame.interrupt_number);
     break;
   }
 }

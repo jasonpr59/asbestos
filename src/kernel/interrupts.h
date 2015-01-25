@@ -2,6 +2,7 @@
 #define ASBESTOS_KERNEL_INTERRUPTS_H_
 
 #include <stdint.h>
+#include <x86.h>
 
 // Useful resources:
 // http://www.intel.com/design/pentium/manuals/24143004.pdf
@@ -42,6 +43,21 @@ struct InterruptDescriptor {
   unsigned int present : 1;
   uint16_t offset_31_16;
 } __attribute__((packed));
+
+
+struct CpuExceptionFrame {
+  uint32_t error_code;
+  uintptr_t eip;
+  uint16_t cs;
+  uint16_t padding_1;
+  uint16_t eflags;
+};
+
+struct TrapFrame {
+  struct PushedRegisters pushed_registers;
+  uint32_t interrupt_number;
+  struct CpuExceptionFrame cpu_frame;
+};
 
 void interrupts_initialize();
 void handle_interrupt();
