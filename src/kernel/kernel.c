@@ -2,6 +2,7 @@
 #include "cprintf.h"
 #include "link_address.h"
 #include "memory_catalog.h"
+#include "interrupts.h"
 #include "monitor.h"
 #include "multiboot.h"
 #include "panic.h"
@@ -43,6 +44,8 @@ void kernel_main(struct PushedRegisters registers) {
   struct MultibootInfo *multiboot_info = (struct MultibootInfo *) registers.ebx;
   kernel_validate_multiboot_handoff(registers.eax, multiboot_info);
   memory_catalog_initialize(multiboot_info);
+
+  interrupts_initialize();
 
   run_monitor();
 }

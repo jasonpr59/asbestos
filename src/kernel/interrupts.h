@@ -1,0 +1,51 @@
+#ifndef ASBESTOS_KERNEL_INTERRUPTS_H_
+#define ASBESTOS_KERNEL_INTERRUPTS_H_
+
+#include <stdint.h>
+
+// Useful resources:
+// http://www.intel.com/design/pentium/manuals/24143004.pdf
+// https://css.csail.mit.edu/6.858/2010/readings/i386.pdf
+
+#define INTERRUPT_DIVIDE_ERROR 0
+#define INTERRUPT_DEBUG_EXCEPTION 1
+#define INTERRUPT_NMI 2
+#define INTERRUPT_BREAKPOINT 3
+#define INTERRUPT_OVERFLOW 4
+#define INTERRUPT_BOUNDS_CHECK 5
+#define INTERRUPT_INVALID_OPCODE 6
+#define INTERRUPT_COPROCESSOR_NOT_AVAILABLE 7
+#define INTERRUPT_DOUBLE_FAULT 8
+#define INTERRUPT_RESERVED_9 9
+#define INTERRUPT_INVALID_TSS 10
+#define INTERRUPT_SEGMENT_NOT_PRESENT 11
+#define INTERRUPT_STACK_EXCEPTION 12
+#define INTERRUPT_GENERAL_PROTECTION_FAULT 13
+#define INTERRUPT_PAGE_FAULT 14
+#define INTERRUPT_RESERVED_15 15
+#define INTERRUPT_COPROCESSOR_ERROR 16
+#define IDT_SIZE 17
+
+// An InterruptDescriptor is a "Trap Gate" from page 157 of the i386
+// manual.  The author of
+// http://littleosbook.github.io/#interrupts-handlers recommends using
+// this type of gate (not a task gate or an interrupt gate).
+struct InterruptDescriptor {
+  uint16_t offset_15_0;
+  struct SegmentSelector selector;
+  unsigned int unused_1 : 5;
+  unsigned int zeroes_1 : 3;
+  // The manual doesn't explain these flags.
+  // It only specifies that they must have values 0b01111.
+  unsigned int flags : 5;
+  unsigned int privilege_level : 2;
+  unsigned int present : 1;
+  uint16_t offset_31_16;
+} __attribute__((packed));
+
+void interrupts_initialize();
+void handle_interrupt();
+
+extern const uintptr_t trap_functions[];
+
+#endif  // ASBESTOS_KERNEL_INTERRUPTS_H_
