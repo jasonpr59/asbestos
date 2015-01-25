@@ -45,7 +45,9 @@ void kernel_main(struct PushedRegisters registers) {
   kernel_validate_multiboot_handoff(registers.eax, multiboot_info);
   memory_catalog_initialize(multiboot_info);
 
+  cprintf("Initializing interrupt handling system.\n");
   interrupts_initialize();
 
+  cprintf("Survived startup.\n");
   run_monitor();
 }

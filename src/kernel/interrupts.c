@@ -81,6 +81,20 @@ void handle_interrupt(int interrupt) {
   }
 }
 
+// TODO(jasonpr): Define these in a much better place!
+#define PIC_MASTER 0x20
+#define PIC_SLAVE 0xA0
+#define PIC_MASTER_DATA (PIC_MASTER + 1)
+#define PIC_SLAVE_DATA (PIC_SLAVE + 1)
+
+void disable_pics() {
+  // Write a fully set bitmask to both PICs, so no hardware interrupts
+  // come through.
+  // TODO(jasonpr): Move PIC-related code elsewhere.
+  outb(PIC_MASTER_DATA, 0xFF);
+  outb(PIC_SLAVE_DATA, 0xFF);
+}
+
 void setup_idt() {
   for (int entry = 0; entry < IDT_SIZE; entry++) {
     idt[entry] = idt_entry((uintptr_t) trap_functions[entry]);
@@ -89,6 +103,7 @@ void setup_idt() {
 }
 
 void interrupts_initialize() {
+  disable_pics();
   setup_idt();
   enable_interrupts();
 }
