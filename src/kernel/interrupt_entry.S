@@ -2,70 +2,74 @@
 
 trap_handler_0:
 	push $0
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_1:
 	push $1
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_2:
 	push $2
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_3:
 	push $3
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_4:
 	push $4
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_5:
 	push $5
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_6:
 	push $6
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_7:
 	push $7
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_8:
 	push $8
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_9:
 	push $9
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_10:
 	push $10
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_11:
 	push $11
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_12:
 	push $12
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_13:
 	push $13
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_14:
 	push $14
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_15:
 	push $15
-	call handle_interrupt
+	jmp call_handler
 
 trap_handler_16:
 	push $16
+	jmp call_handler
+
+// Call the interrupt handler. Pass the trap frame as an argument.
+call_handler:
 	call handle_interrupt
 
 .align 4
