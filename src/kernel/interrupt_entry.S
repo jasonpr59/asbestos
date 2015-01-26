@@ -354,6 +354,10 @@ trap_handler_60:
 call_handler:
 	pushal
 	call handle_interrupt
+	popal
+	// Remove interrupt number and error code.
+	add $8, %esp
+	iret
 
 .align 4
 .global trap_functions
