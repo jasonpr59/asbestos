@@ -83,6 +83,12 @@ void handle_interrupt(struct TrapFrame trap_frame) {
   case INTERRUPT_COPROCESSOR_ERROR:
     panic("Coprocessor error.\n");
     break;
+  case INTERRUPT_PASS_THROUGH:
+    cprintf("Handling pass-through interrupt.\n");
+    break;
+  case INTERRUPT_SYSCALL:
+    panic("Syscall.\n");
+    break;
   default:
     panic("Unidentified interrupt: %d.\n", trap_frame.interrupt_number);
     break;

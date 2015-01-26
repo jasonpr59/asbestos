@@ -49,5 +49,7 @@ void kernel_main(struct PushedRegisters registers) {
   interrupts_initialize();
 
   cprintf("Survived startup.\n");
+
+  fire_interrupt(INTERRUPT_PASS_THROUGH);
   run_monitor();
 }

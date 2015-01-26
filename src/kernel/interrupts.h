@@ -25,7 +25,9 @@
 #define INTERRUPT_PAGE_FAULT 14
 #define INTERRUPT_RESERVED_15 15
 #define INTERRUPT_COPROCESSOR_ERROR 16
-#define IDT_SIZE 17
+#define INTERRUPT_PASS_THROUGH 50
+#define INTERRUPT_SYSCALL 60
+#define IDT_SIZE 62
 
 // An InterruptDescriptor is a "Trap Gate" from page 157 of the i386
 // manual.  The author of

@@ -23,6 +23,7 @@ static __inline void load_gdt(struct PseudoDescriptor *gdt) __attribute__((alway
 static __inline void load_idt(struct PseudoDescriptor *idt) __attribute__((always_inline));
 static __inline void enable_interrupts() __attribute__((always_inline));
 static __inline void disable_interrupts() __attribute__((always_inline));
+static __inline void fire_interrupt(uint8_t interrupt_number) __attribute__((always_inline));
 
 
 // Get the current base pointer.
@@ -121,6 +122,13 @@ static void disable_interrupts() {
 		   /* No output. */ :
 		   /* No input. */);
 }
+
+static void fire_interrupt(uint8_t interrupt_number) {
+  __asm __volatile("int %0" :
+		   /* No output. */ :
+		   "i" (interrupt_number));
+}
+
 
 struct PushedRegisters {
   uint32_t edi;
