@@ -13,7 +13,7 @@ SRCDIR = src
 LIBDIR = $(SRCDIR)/lib
 
 # Find source files.
-ASMSOURCES := $(shell find $(SRCDIR) -type f -name "*.s")
+ASMSOURCES := $(shell find $(SRCDIR) -type f -name "*.S")
 CSOURCES := $(shell find $(SRCDIR) -type f -name "*.c")
 HDRFILES := $(shell find $(SRCDIR) -type f -name "*.h")
 
@@ -28,7 +28,7 @@ CCFLAGS += -fno-omit-frame-pointer
 LDFLAGS := $(FLAGS) -nostdlib -Wl,-M
 
 OBJDIR := obj
-ASMOBJS := $(patsubst $(SRCDIR)/%.s,$(OBJDIR)/%.o,$(ASMSOURCES))
+ASMOBJS := $(patsubst $(SRCDIR)/%.S,$(OBJDIR)/%.o,$(ASMSOURCES))
 COBJS := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(CSOURCES))
 ALLOBJS := $(ASMOBJS) $(COBJS)
 
@@ -36,7 +36,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@mkdir -p $(@D)
 	$(CC) -c $< -o $@ $(CCFLAGS) -MMD -MP
 
-$(OBJDIR)/%.o : $(SRCDIR)/%.s
+$(OBJDIR)/%.o : $(SRCDIR)/%.S
 	@mkdir -p $(@D)
 	$(AS) -c $< -o $@
 
