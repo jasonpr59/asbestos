@@ -1,5 +1,4 @@
 # This file is heavily influenced by http://wiki.osdev.org/Bare_Bones.
-# (Dummy change to overcome git case sensitivity bug.)
 
 # Declare constants used for creating a multiboot header.
 # Align loaded modules on page boundaries.
