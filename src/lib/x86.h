@@ -19,7 +19,11 @@ static __inline void load_es(struct SegmentSelector selector) __attribute__((alw
 static __inline void load_fs(struct SegmentSelector selector) __attribute__((always_inline));
 static __inline void load_gs(struct SegmentSelector selector) __attribute__((always_inline));
 static __inline void load_ss(struct SegmentSelector selector) __attribute__((always_inline));
-static __inline void load_gdt(uintptr_t start) __attribute__((always_inline));
+static __inline void load_gdt(struct PseudoDescriptor *gdt) __attribute__((always_inline));
+static __inline void load_idt(struct PseudoDescriptor *idt) __attribute__((always_inline));
+static __inline void enable_interrupts() __attribute__((always_inline));
+static __inline void disable_interrupts() __attribute__((always_inline));
+static __inline void fire_interrupt(uint8_t interrupt_number) __attribute__((always_inline));
 
 
 // Get the current base pointer.
@@ -95,11 +99,36 @@ static void load_ss(struct SegmentSelector selector) {
 		   "r" (selector));
 }
 
-static void load_gdt(uintptr_t start) {
+static void load_gdt(struct PseudoDescriptor *gdt) {
   __asm __volatile("lgdt (%0)" :
 		   /* No output. */ :
-		   "r" (start));
+		   "r" (pseudo_descriptor_address(gdt)));
 }
+
+static void load_idt(struct PseudoDescriptor *idt) {
+  __asm __volatile("lidt (%0)" :
+		   /* No output. */ :
+		   "r" (pseudo_descriptor_address(idt)));
+}
+
+static void enable_interrupts() {
+  __asm __volatile("sti" :
+		   /* No output. */ :
+		   /* No input. */);
+}
+
+static void disable_interrupts() {
+  __asm __volatile("cli" :
+		   /* No output. */ :
+		   /* No input. */);
+}
+
+static void fire_interrupt(uint8_t interrupt_number) {
+  __asm __volatile("int %0" :
+		   /* No output. */ :
+		   "i" (interrupt_number));
+}
+
 
 struct PushedRegisters {
   uint32_t edi;

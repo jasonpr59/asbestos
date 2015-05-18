@@ -45,6 +45,19 @@ struct SegmentDescriptor {
 #define GDT_DATA_SEGMENT_OFFSET 2
 #define GDT_SIZE 3
 
+static struct SegmentSelector GDT_NULL_SELECTOR = {
+  .index = GDT_NULL_SEGMENT_OFFSET
+};
+
+static struct SegmentSelector GDT_CODE_SELECTOR = {
+  .index = GDT_CODE_SEGMENT_OFFSET
+};
+
+static struct SegmentSelector GDT_DATA_SELECTOR = {
+  .index = GDT_DATA_SEGMENT_OFFSET
+};
+
+
 void segmentation_initialize();
 
 #endif  // ASBESTOS_KERNEL_SEGMENT_H_

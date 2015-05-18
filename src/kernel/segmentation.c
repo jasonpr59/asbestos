@@ -39,35 +39,22 @@ void initialize_gdt() {
   // Add a data segment.
   gdt[GDT_DATA_SEGMENT_OFFSET] = spanning_gdt_entry(true, false);
 
-  uintptr_t lgdt_target = pseudo_descriptor_gdt_address(&gdt_descriptor);
-  load_gdt(lgdt_target);
+  load_gdt(&gdt_descriptor);
 }
 
 void initialize_selectors() {
-  struct SegmentSelector null_selector = {
-    .index = GDT_NULL_SEGMENT_OFFSET
-  };
-
-  struct SegmentSelector code_selector = {
-    .index = GDT_CODE_SEGMENT_OFFSET
-  };
-
-  struct SegmentSelector data_selector = {
-    .index = GDT_DATA_SEGMENT_OFFSET
-  };
-
-  load_cs(code_selector);
+  load_cs(GDT_CODE_SELECTOR);
 
   // Load DS for normal data access, SS for stack access, and ES for
   // string-related data access.
-  load_ds(data_selector);
-  load_ss(data_selector);
-  load_es(data_selector);
+  load_ds(GDT_DATA_SELECTOR);
+  load_ss(GDT_DATA_SELECTOR);
+  load_es(GDT_DATA_SELECTOR);
 
   // We don't use the general-purpose segments.  Make sure we segfault
   // if we accidentally use them.
-  load_fs(null_selector);
-  load_gs(null_selector);
+  load_fs(GDT_NULL_SELECTOR);
+  load_gs(GDT_NULL_SELECTOR);
 }
 
 void segmentation_initialize() {
