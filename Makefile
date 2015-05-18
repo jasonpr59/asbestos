@@ -59,9 +59,14 @@ kernel: $(KERNIMG)
 clean:
 	@-rm -rf $(OBJDIR) $(DEPFILES) $(KERNIMG) $(KERNASM) $(LDMAP)
 
-QEMU := qemu-system-i386 -kernel $(KERNIMG) -serial mon:stdio -m 3G
+QEMUFLAGS := -kernel $(KERNIMG)
+QEMUFLAGS += -serial mon:stdio
+QEMUFLAGS += -m 3G
+QEMUFLAGS += $(QEMUEXTRA)
+QEMU := qemu-system-i386
+
 qemu: kernel
-	$(QEMU)
+	$(QEMU) $(QEMUFLAGS)
 
 qemu-gdb: kernel
-	$(QEMU) -gdb tcp::8998 -S
+	$(QEMU) -gdb tcp::8998 -S $(QEMUFLAGS)
