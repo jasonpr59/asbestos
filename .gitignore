@@ -2,3 +2,7 @@
 *.bin
 *.iso
 *~
+obj/
+asbestos.bin
+asbestos.bin.asm
+asbestos.map
