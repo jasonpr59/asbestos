@@ -82,6 +82,14 @@ void handle_interrupt(struct TrapFrame trap_frame) {
   case INTERRUPT_COPROCESSOR_ERROR:
     panic("Coprocessor error.\n");
     break;
+  case INTERRUPT_TIMER:
+    // TODO(jasonpr): Handle timer interrupt.
+    pic_send_eoi();
+    break;
+  case INTERRUPT_KEYBOARD:
+    // TODO(jasonpr): Handle keyboard interrupt.
+    pic_send_eoi();
+    break;
   case INTERRUPT_PASS_THROUGH:
     cprintf("Handling pass-through interrupt.\n");
     break;
