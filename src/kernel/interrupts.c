@@ -113,4 +113,5 @@ void interrupts_initialize() {
   disable_pics();
   setup_idt();
   enable_interrupts();
+  enable_pics();
 }
