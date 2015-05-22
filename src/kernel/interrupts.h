@@ -37,7 +37,7 @@
 #define LPT2_IR_LINE 5
 #define FLOPPY_IR_LINE 6
 #define SPURIOUS_IR_LINE 7
-#define CMOS_IR_LINE_8
+#define CMOS_RTC_IR_LINE 8
 #define MOUSE_IR_LINE 12
 #define COPROCESSOR_IR_LINE 13
 #define ATA1_IR_LINE 14
