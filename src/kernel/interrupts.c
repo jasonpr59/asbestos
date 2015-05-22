@@ -4,7 +4,9 @@
 #include "interrupts.h"
 #include "cprintf.h"
 #include "panic.h"
+#include "pic.h"
 #include "segmentation.h"
+#include "serial.h"
 
 static struct InterruptDescriptor idt[IDT_SIZE];
 static struct PseudoDescriptor idt_descriptor = {
@@ -29,8 +31,6 @@ void print_trap_frame(struct TrapFrame *trap_frame) {
 }
 
 void handle_interrupt(struct TrapFrame trap_frame) {
-  print_trap_frame(&trap_frame);
-
   switch (trap_frame.interrupt_number) {
   case INTERRUPT_DIVIDE_ERROR:
     panic("Divide error.\n");
@@ -83,6 +83,20 @@ void handle_interrupt(struct TrapFrame trap_frame) {
   case INTERRUPT_COPROCESSOR_ERROR:
     panic("Coprocessor error.\n");
     break;
+  case INTERRUPT_TIMER:
+    // TODO(jasonpr): Handle timer interrupt.
+    pic_send_eoi();
+    break;
+  case INTERRUPT_KEYBOARD:
+    // TODO(jasonpr): Handle keyboard interrupt.
+    pic_send_eoi();
+    break;
+  case INTERRUPT_COM1:
+    // TODO(jasonpr): Handle serial interrupt properly.
+    // The character should actually be put into an input buffer.
+    cprint_char(serial_read());
+    pic_send_eoi();
+    break;
   case INTERRUPT_PASS_THROUGH:
     cprintf("Handling pass-through interrupt.\n");
     break;
@@ -93,20 +107,6 @@ void handle_interrupt(struct TrapFrame trap_frame) {
     panic("Unidentified interrupt: %d.\n", trap_frame.interrupt_number);
     break;
   }
-}
-
-// TODO(jasonpr): Define these in a much better place!
-#define PIC_MASTER 0x20
-#define PIC_SLAVE 0xA0
-#define PIC_MASTER_DATA (PIC_MASTER + 1)
-#define PIC_SLAVE_DATA (PIC_SLAVE + 1)
-
-void disable_pics() {
-  // Write a fully set bitmask to both PICs, so no hardware interrupts
-  // come through.
-  // TODO(jasonpr): Move PIC-related code elsewhere.
-  outb(PIC_MASTER_DATA, 0xFF);
-  outb(PIC_SLAVE_DATA, 0xFF);
 }
 
 void setup_idt() {
@@ -120,4 +120,5 @@ void interrupts_initialize() {
   disable_pics();
   setup_idt();
   enable_interrupts();
+  enable_pics();
 }
