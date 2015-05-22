@@ -30,8 +30,6 @@ void print_trap_frame(struct TrapFrame *trap_frame) {
 }
 
 void handle_interrupt(struct TrapFrame trap_frame) {
-  print_trap_frame(&trap_frame);
-
   switch (trap_frame.interrupt_number) {
   case INTERRUPT_DIVIDE_ERROR:
     panic("Divide error.\n");
