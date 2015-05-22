@@ -35,6 +35,10 @@ void disable_pics() {
 }
 
 void enable_pics() {
+  // Enable the master PIC.
+  // This involves configuring it for single-PIC, 8086-mode operation,
+  // and unmasking the interrupts we want to see.
+  // TODO(jasonpr): Enable the slave PIC.
   uint8_t icw1 = PIC_ICW1_MAGIC_BIT | PIC_ICW1_SNGL | PIC_ICW1_IC4;
   outb(PIC_MASTER_CMD, icw1);
 
@@ -55,6 +59,8 @@ void enable_pics() {
 }
 
 void pic_send_eoi() {
+  // Send and EOI signal to the master PIC, so it may continue to send
+  // us interrupts.
   // For now, assume the the interrupt came from the master, and
   // only send the eoi to the master.
   // TODO(jasonpr): Handle slave-initiated interrupts.
