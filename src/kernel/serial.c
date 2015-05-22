@@ -77,6 +77,18 @@ void serial_write(char character) {
   outb(UART_DATA_IO_PORT, character);
 }
 
+bool serial_can_read() {
+  return inb(UART_LINE_STATUS_IO_PORT) &
+    UART_LINE_STATUS_DATA_READY;
+}
+
+char serial_read() {
+  while (!serial_can_read()){
+    // Spin around.
+  }
+  return inb(UART_DATA_IO_PORT);
+}
+
 void serial_initialize() {
   // Set baud rate to highest possible value.  Requires setting the
   // divisor latch (DLAB).
@@ -87,6 +99,6 @@ void serial_initialize() {
   // Unset the divisor latch, simultaneously setting up 8N1 communication.
   outb(UART_LINE_CONTROL_IO_PORT, UART_LINE_CONTROL_WORD_LENGTH_8);
 
-  // Disable interrupts from the UART.
-  outb(UART_INTERRUPT_ENABLE_IO_PORT, 0);
+  // Fire an interrupt when a new byte is received.
+  outb(UART_INTERRUPT_ENABLE_IO_PORT, UART_INTERRUPT_DATA_AVAILABLE);
 }

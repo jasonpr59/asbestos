@@ -6,6 +6,7 @@
 #include "panic.h"
 #include "pic.h"
 #include "segmentation.h"
+#include "serial.h"
 
 static struct InterruptDescriptor idt[IDT_SIZE];
 static struct PseudoDescriptor idt_descriptor = {
@@ -88,6 +89,12 @@ void handle_interrupt(struct TrapFrame trap_frame) {
     break;
   case INTERRUPT_KEYBOARD:
     // TODO(jasonpr): Handle keyboard interrupt.
+    pic_send_eoi();
+    break;
+  case INTERRUPT_COM1:
+    // TODO(jasonpr): Handle serial interrupt properly.
+    // The character should actually be put into an input buffer.
+    cprint_char(serial_read());
     pic_send_eoi();
     break;
   case INTERRUPT_PASS_THROUGH:
