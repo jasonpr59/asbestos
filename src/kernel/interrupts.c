@@ -4,6 +4,7 @@
 #include "interrupts.h"
 #include "cprintf.h"
 #include "panic.h"
+#include "pic.h"
 #include "segmentation.h"
 
 static struct InterruptDescriptor idt[IDT_SIZE];
@@ -93,20 +94,6 @@ void handle_interrupt(struct TrapFrame trap_frame) {
     panic("Unidentified interrupt: %d.\n", trap_frame.interrupt_number);
     break;
   }
-}
-
-// TODO(jasonpr): Define these in a much better place!
-#define PIC_MASTER 0x20
-#define PIC_SLAVE 0xA0
-#define PIC_MASTER_DATA (PIC_MASTER + 1)
-#define PIC_SLAVE_DATA (PIC_SLAVE + 1)
-
-void disable_pics() {
-  // Write a fully set bitmask to both PICs, so no hardware interrupts
-  // come through.
-  // TODO(jasonpr): Move PIC-related code elsewhere.
-  outb(PIC_MASTER_DATA, 0xFF);
-  outb(PIC_SLAVE_DATA, 0xFF);
 }
 
 void setup_idt() {
