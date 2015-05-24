@@ -5,9 +5,11 @@ char * read_string(char (*read_character)(), char *buffer, size_t buffer_size,
   size_t index = 0;
   while (index < buffer_size - 1) {
     char input = read_character();
-    // TODO(jasonpr): Decide on either \n or \r as the Asbestos
-    // standard, and require the input source to do its own
-    // conversions for plaintext input.
+    // The Asbestos standard is that \n is a newline, but we'll accept
+    // \r as an EOL character.
+    // TODO(jasonpr): Also accept CRLF or LFCR as a newline character
+    // pair, and don't return before consuming the second half of this
+    // nonconforming newline.
     if (input == '\n' || input == '\r') {
       write_character('\n');
       break;
