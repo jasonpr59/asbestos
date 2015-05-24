@@ -3,6 +3,7 @@
 #include "cprintf.h"
 #include "input.h"
 #include "keyboard.h"
+#include "panic.h"
 
 #define CHARACTER_RING_SIZE 100
 
@@ -16,16 +17,20 @@ static struct RingBuffer character_buffer = {
 
 
 int get_keyboard_input() {
-  while (keyboard_has_output()) {
-    if (ring_buffer_full(&character_buffer)) {
-      return -1;
-    }
-    char ascii_char = keyboard_consume_keypress();
-    if (ascii_char) {
-      ring_buffer_append(&character_buffer, ascii_char);
+  while (!ring_buffer_full(&character_buffer)) {
+    char input;
+    int result = keyboard_read(&input);
+    if (result == 0) {
+      ring_buffer_append(&character_buffer, input);
+    } else if (result == INPUT_RETRY) {
+      continue;
+    } else if (result == INPUT_EXHAUSTED) {
+      return 0;
+    } else {
+      panic("[INPUT] Unexpected keyboard result: 0x%02x\n", result);
     }
   }
-  return 0;
+  return ERR_INPUT_BUFFER_FULL;
 }
 
 int get_serial_input() {

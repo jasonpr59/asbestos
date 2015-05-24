@@ -10,9 +10,9 @@
 #include <stddef.h>
 #include <x86.h>
 #include "cprintf.h"
+#include "input.h"
 #include "panic.h"
 #include "keyboard.h"
-
 
 #define KEYBOARD_DATA_IO_PORT 0x60
 #define KEYBOARD_STATUS_IO_PORT 0x64
@@ -115,7 +115,11 @@ void keyboard_initialize() {
   keyboard_interface_test();
 }
 
-char keyboard_consume_keypress() {
+int keyboard_read(char *output) {
+  if (!keyboard_has_output()) {
+    return INPUT_EXHAUSTED;
+  }
+
   char scancode = keyboard_read_data();
   if (scancode == kScancodeLeftShiftPressed) {
     left_shift_pressed = true;
@@ -130,7 +134,11 @@ char keyboard_consume_keypress() {
   char ascii_character = (left_shift_pressed || right_shift_pressed)
       ? key_to_ascii_shift[scancode_index]
       : key_to_ascii[scancode_index];
-  // Return the ASCII character, or 0x00 if there is no matching
-  // typeable character.
-  return ascii_character;
+  if (ascii_character) {
+    *output = ascii_character;
+    return 0;
+  } else {
+    // This keypress did not yield a character.
+    return INPUT_RETRY;
+  }
 }
