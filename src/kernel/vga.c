@@ -88,9 +88,18 @@ void vga_reposition() {
   vga_update_cursor();
 }
 
+// Write a CRLF.
+// TODO(jasonpr): Only write the LF.  Once we've decided on the
+// Asbestos standard newline, we can require clients that deal with
+// VGA to convert between that standard and a true CRLF.
 void vga_write_newline() {
   vga_column = 0;
   vga_row++;
+  vga_reposition();
+}
+
+void vga_write_carriage_return() {
+  vga_column = 0;
   vga_reposition();
 }
 
@@ -98,6 +107,9 @@ void vga_write(char character) {
   // Handle special characters specially.
   if (character == '\n') {
     vga_write_newline();
+    return;
+  } else if (character == '\r') {
+    vga_write_carriage_return();
     return;
   }
 

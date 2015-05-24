@@ -35,21 +35,9 @@ char input_character() {
   while (ring_buffer_empty(&character_buffer)) {
     // Spin until an interrupt handler feeds the buffer.
   }
-  char input = ring_buffer_pop(&character_buffer);
-
-  // TODO(jasonpr): Decide on a good time to do newline conversions.
-  // This will involve determining which functions should return the
-  // raw data they get from the hardware, and which ones should expose
-  // a consistent interface.
-  // Since we use '\n' as a full line ending in vga.c, this
-  // conversion works.  But, it's hacky.
-  if (input == '\r') {
-    input = '\n';
-  }
-  cprint_char(input);
-  return input;
+  return ring_buffer_pop(&character_buffer);
 }
 
 char * input_string(char *buffer, size_t buffer_size) {
-  return read_string(input_character, buffer, buffer_size);
+  return read_string(input_character, buffer, buffer_size, cprint_char);
 }
