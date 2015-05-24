@@ -2,8 +2,6 @@
 #include <ringbuffer.h>
 #include "cprintf.h"
 #include "input.h"
-#include "keyboard.h"
-#include "serial.h"
 #include "panic.h"
 
 #define CHARACTER_RING_SIZE 100
@@ -31,14 +29,6 @@ int read_all_input(int (*input_read)(char *output)) {
     }
   }
   return ERR_INPUT_BUFFER_FULL;
-}
-
-int get_keyboard_input() {
-  return read_all_input(keyboard_read);
-}
-
-int get_serial_input() {
-  return read_all_input(serial_read);
 }
 
 char input_character() {

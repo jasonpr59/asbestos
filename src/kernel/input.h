@@ -16,8 +16,7 @@
 #define INPUT_RETRY -2
 
 
-int get_keyboard_input();
-int get_serial_input();
+int read_all_input(int (*input_read)(char *output));
 char input_character();
 char * input_string(char *buffer, size_t buffer_size);
 

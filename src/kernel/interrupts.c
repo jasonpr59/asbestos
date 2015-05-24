@@ -4,6 +4,7 @@
 #include "interrupts.h"
 #include "cprintf.h"
 #include "input.h"
+#include "keyboard.h"
 #include "panic.h"
 #include "pic.h"
 #include "segmentation.h"
@@ -89,11 +90,11 @@ void handle_interrupt(struct TrapFrame trap_frame) {
     pic_send_eoi();
     break;
   case INTERRUPT_KEYBOARD:
-    get_keyboard_input();
+    read_all_input(keyboard_read);
     pic_send_eoi();
     break;
   case INTERRUPT_COM1:
-    get_serial_input();
+    read_all_input(serial_read);
     pic_send_eoi();
     break;
   case INTERRUPT_PASS_THROUGH:
