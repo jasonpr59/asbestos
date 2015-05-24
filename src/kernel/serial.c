@@ -10,6 +10,7 @@
 
 #include <stdbool.h>
 #include <x86.h>
+#include "input.h"
 #include "serial.h"
 
 #define COM1_IO_PORT 0x3f8
@@ -82,11 +83,12 @@ bool serial_can_read() {
     UART_LINE_STATUS_DATA_READY;
 }
 
-char serial_read() {
-  while (!serial_can_read()){
-    // Spin around.
+int serial_read(char *output) {
+  if (!serial_can_read()) {
+    return INPUT_EXHAUSTED;
   }
-  return inb(UART_DATA_IO_PORT);
+  *output = inb(UART_DATA_IO_PORT);
+  return 0;
 }
 
 void serial_initialize() {
