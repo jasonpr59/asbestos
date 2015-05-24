@@ -6,8 +6,8 @@
 //  * The IBM PC AT Technical Reference (1502494), available online at
 //    ia801607.us.archive.org/30/items/bitsavers_ibmpcat150ferenceMar84_26847525/1502494_PC_AT_Technical_Reference_Mar84.pdf
 
-#include <ringbuffer.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <x86.h>
 #include "cprintf.h"
 #include "panic.h"
@@ -27,13 +27,10 @@
 #define KEYBOARD_INTERFACE_TEST_COMMAND 0xAB
 #define KEYBOARD_INTERFACE_TEST_EXPECTED_RESULT 0x00
 
-#define CHARACTER_RING_SIZE 100
-
 static const char kScancodeLeftShiftPressed = 0x2A;
 static const char kScancodeLeftShiftReleased = 0xAA;
 static const char kScancodeRightShiftPressed = 0x36;
 static const char kScancodeRightShiftReleased = 0xB6;
-
 
 static char key_to_ascii[256] =
 {
@@ -66,13 +63,6 @@ static char key_to_ascii_shift[256] =
 };
 
 // Keyboard state.
-static char character_ring_space[CHARACTER_RING_SIZE];
-static struct RingBuffer character_buffer = {
-  character_ring_space,
-  CHARACTER_RING_SIZE,
-  0,
-  0
-};
 static bool left_shift_pressed = false; 
 static bool right_shift_pressed = false; 
 
@@ -91,6 +81,12 @@ void spin_until_output_buffer_full() {
 void keyboard_write_command(char command) {
   spin_until_input_buffer_empty();
   outb(KEYBOARD_COMMAND_IO_PORT, command);
+}
+
+bool keyboard_has_output() {
+  // Returns whether the keyboard has data to be read.
+  // That is, returns true if the output buffer is not empty.
+  return inb(KEYBOARD_STATUS_IO_PORT) & KEYBOARD_OUTPUT_BUFFER_FULL;
 }
 
 char keyboard_read_data() {
@@ -119,14 +115,7 @@ void keyboard_initialize() {
   keyboard_interface_test();
 }
 
-// Return zero if the keypress was successfully consumed, -1 otherwise.
-// A failure will occur if the kernel's key buffer is full.
-int consume_keypress() {
-  if (ring_buffer_full(&character_buffer)) {
-    // Fail immediately, even though it's possible that the key will
-    // not require adding to the buffer.
-    return -1;
-  }
+char keyboard_consume_keypress() {
   char scancode = keyboard_read_data();
   if (scancode == kScancodeLeftShiftPressed) {
     left_shift_pressed = true;
@@ -141,17 +130,7 @@ int consume_keypress() {
   char ascii_character = (left_shift_pressed || right_shift_pressed)
       ? key_to_ascii_shift[scancode_index]
       : key_to_ascii[scancode_index];
-  if (ascii_character) {
-    ring_buffer_append(&character_buffer, ascii_character);
-  }
-  // Otherwise, there was no ASCII value for this key.  It must have
-  // been special.  For now, ignore it.
-  return 0;
-}
-
-char keyboard_read() {
-  while (ring_buffer_empty(&character_buffer)) {
-    consume_keypress();
-  }
-  return ring_buffer_pop(&character_buffer);
+  // Return the ASCII character, or 0x00 if there is no matching
+  // typeable character.
+  return ascii_character;
 }
