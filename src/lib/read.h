@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
-char * read_string(char (*read_character)(), char *buffer, size_t buffer_size);
+char * read_string(char (*read_character)(), char *buffer, size_t buffer_size,
+		   void (*write_character)(char));
 
 #endif  // ASBESTOS_LIB_READ_H_

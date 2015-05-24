@@ -13,5 +13,6 @@ void run_monitor() {
     cprintf("$ ");
     input_string(prompt, PROMPT_SIZE);
     cprintf(prompt);
+    cprintf("\n");
   }
 }

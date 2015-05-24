@@ -88,9 +88,17 @@ void vga_reposition() {
   vga_update_cursor();
 }
 
+// Write a CRLF.
+// The Asbestos newline convention is a single '\n'.  The carriage
+// return is implied.
 void vga_write_newline() {
   vga_column = 0;
   vga_row++;
+  vga_reposition();
+}
+
+void vga_write_carriage_return() {
+  vga_column = 0;
   vga_reposition();
 }
 
@@ -98,6 +106,9 @@ void vga_write(char character) {
   // Handle special characters specially.
   if (character == '\n') {
     vga_write_newline();
+    return;
+  } else if (character == '\r') {
+    vga_write_carriage_return();
     return;
   }
 
