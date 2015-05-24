@@ -83,12 +83,6 @@ void keyboard_write_command(char command) {
   outb(KEYBOARD_COMMAND_IO_PORT, command);
 }
 
-bool keyboard_has_output() {
-  // Returns whether the keyboard has data to be read.
-  // That is, returns true if the output buffer is not empty.
-  return inb(KEYBOARD_STATUS_IO_PORT) & KEYBOARD_OUTPUT_BUFFER_FULL;
-}
-
 char keyboard_read_data() {
   spin_until_output_buffer_full();
   return inb(KEYBOARD_DATA_IO_PORT);
@@ -116,7 +110,7 @@ void keyboard_initialize() {
 }
 
 int keyboard_read(char *output) {
-  if (!keyboard_has_output()) {
+  if (!(inb(KEYBOARD_STATUS_IO_PORT) & KEYBOARD_OUTPUT_BUFFER_FULL)) {
     return INPUT_EXHAUSTED;
   }
 
