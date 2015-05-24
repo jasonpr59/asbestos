@@ -3,6 +3,8 @@
 
 #include "interrupts.h"
 #include "cprintf.h"
+#include "input.h"
+#include "keyboard.h"
 #include "panic.h"
 #include "pic.h"
 #include "segmentation.h"
@@ -88,13 +90,11 @@ void handle_interrupt(struct TrapFrame trap_frame) {
     pic_send_eoi();
     break;
   case INTERRUPT_KEYBOARD:
-    // TODO(jasonpr): Handle keyboard interrupt.
+    read_all_input(keyboard_read);
     pic_send_eoi();
     break;
   case INTERRUPT_COM1:
-    // TODO(jasonpr): Handle serial interrupt properly.
-    // The character should actually be put into an input buffer.
-    cprint_char(serial_read());
+    read_all_input(serial_read);
     pic_send_eoi();
     break;
   case INTERRUPT_PASS_THROUGH:

@@ -2,6 +2,6 @@
 #define ASBESTOS_KERNEL_KEYBOARD_H_
 
 void keyboard_initialize();
-char keyboard_read();
+int keyboard_read(char *output);
 
 #endif  // ASBESTOS_KERNEL_KEYBOARD_H_

@@ -3,6 +3,6 @@
 
 void serial_initialize();
 void serial_write(char character);
-char serial_read();
+int serial_read(char *output);
 
 #endif  // SERIAL_H_
