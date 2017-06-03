@@ -27,7 +27,7 @@ The following are not goals for this project:
 
 Getting Asbestos
 ----------------
-```
+```bash
 git clone https://github.com/jasonpr59/asbestos.git
 # The rest of the README assumes that you are in the asbestos repository.
 cd asbestos
@@ -42,7 +42,7 @@ To build Asbestos, you'll need a cross-compilation toolchain targetting
 'i686-elf'.  By default, the Asbestos Makefile expects the toolchain to be
 installed in the `cross` directory (inside the top-level Asbestos directory).
 From within the Asbestos repo, install it with:
-```
+```bash
 mkdir cross
 cd toolchain
 make install-binutils install-gcc install-libgcc DEST=../cross
@@ -59,7 +59,7 @@ cd ..
 
 All of the Asbestos source combines to build `asbestos.bin`.  This is a
 Multiboot-compatible disk image. Build it with:
-```
+```bash
 make kernel
 ```
 
@@ -71,7 +71,7 @@ Running Asbestos
 I run Asbestos on QEMU.  (On OS X, I installed QEMU with `brew install qemu`.)
 
 Run QEMU using the `asbestos.bin` disk image with:
-```
+```bash
 make qemu
 ```
 
