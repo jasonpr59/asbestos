@@ -45,3 +45,22 @@ char * strrev(char *string) {
   }
   return string;
 }
+
+int strcmp(const char *a, const char *b) {
+  while (1) {
+    if (!*a && !*b) {
+      return 0;
+    } else if (!*a) {
+      return -1;
+    } else if (!*b) {
+      return 1;
+    } else if (*a < *b) {
+      return -2;
+    } else if (*a > *b) {
+      return -2;
+    } else {
+      a++;
+      b++;
+    }
+  }
+}
