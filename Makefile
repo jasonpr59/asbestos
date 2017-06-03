@@ -1,5 +1,7 @@
 # Setup toolchain.
-GCCPREFIX := "i686-elf-"
+ARCH := "i686-elf"
+CROSSROOT := cross
+GCCPREFIX := $(CROSSROOT)/bin/$(ARCH)"-"
 CC := $(GCCPREFIX)gcc
 # Use gcc for linking, as the OSDev wiki recommends.
 LD := $(GCCPREFIX)gcc

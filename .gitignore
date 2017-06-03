@@ -6,3 +6,8 @@ obj/
 asbestos.bin
 asbestos.bin.asm
 asbestos.map
+
+# The cross-compiler toolchain is built here.
+cross/
+toolchain/src
+toolchain/build
