@@ -72,3 +72,6 @@ qemu: kernel
 
 qemu-gdb: kernel
 	$(QEMU) -gdb tcp::8998 -S $(QEMUFLAGS)
+
+gdb:
+	$(GCCPREFIX)gdb

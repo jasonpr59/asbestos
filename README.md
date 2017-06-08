@@ -78,3 +78,26 @@ make qemu
 ### Running Asbestos on real hardward
 
 I've never tried this.  Stay tuned for instructions.
+
+Debugging Asbestos
+------------------
+
+Use GDB to debug Asbestos.  `asbestos.bin` has file format elf32-i386.  Your GDB might not understand that format.  To install a "cross-GDB", do the following.
+```bash
+mkdir $ASBESTOS/toolchain/src
+cd $ASBESTOS/toolchain/src
+curl https://ftp.gnu.org/gnu/gdb/gdb-8.0.tar.xz > gdb.tar.xz
+tar xf gdb.tar.xz -Cgdb --strip-components=1
+
+mkdir $ASBESTOS/toolchain/build
+cd $ASBESTOS/toolchain/build
+$ASBESTOS/toolchain/src/gdb/configure --target=i686-elf --prefix=$ASBESTOS/cross
+make
+make install
+```
+
+After following the instructions above, you will have installed a "cross-GDB" in
+$ASBESTOS/cross/bin/i686-elf-gdb.  Run QEMU with a GDB debug server with `make
+qemu-gdb`.  Connect to it (from a separate shell) with `make gdb` (which uses
+the `.gdbinit` file in the root Asbestos directory to connect to the server and
+read the symbol file).
