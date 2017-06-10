@@ -6,6 +6,7 @@
 #include "monitor.h"
 #include "multiboot.h"
 #include "panic.h"
+#include "page.h"
 #include "keyboard.h"
 #include "segmentation.h"
 #include "serial.h"
@@ -51,5 +52,6 @@ void kernel_main(struct PushedRegisters registers) {
   cprintf("Survived startup.\n");
 
   fire_interrupt(INTERRUPT_PASS_THROUGH);
+  setup_paging();
   run_monitor();
 }

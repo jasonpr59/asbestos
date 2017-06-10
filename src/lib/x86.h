@@ -9,6 +9,8 @@
 // Usually, we discourage inlining via command line flags. But, we
 // want our instruction wrapper functions to be inlined.  So, we mark
 // all of them with always_inline.
+// TODO(jasonpr): Decide which ones must be inlined, and which should be normal
+// functions.
 
 static __inline uintptr_t get_ebp() __attribute__((always_inline));
 static __inline uint8_t inb(uint16_t io_port) __attribute__((always_inline));
@@ -21,6 +23,10 @@ static __inline void load_gs(struct SegmentSelector selector) __attribute__((alw
 static __inline void load_ss(struct SegmentSelector selector) __attribute__((always_inline));
 static __inline void load_gdt(struct PseudoDescriptor *gdt) __attribute__((always_inline));
 static __inline void load_idt(struct PseudoDescriptor *idt) __attribute__((always_inline));
+static __inline uint32_t get_cr0() __attribute__((always_inline));
+static __inline void set_cr0(uint32_t value) __attribute__((always_inline));
+static __inline uint32_t get_cr3() __attribute__((always_inline));
+static __inline void set_cr3(uintptr_t dir) __attribute__((always_inline));
 static __inline void enable_interrupts() __attribute__((always_inline));
 static __inline void disable_interrupts() __attribute__((always_inline));
 static __inline void fire_interrupt(uint8_t interrupt_number) __attribute__((always_inline));
@@ -35,6 +41,32 @@ static uintptr_t get_ebp() {
   __asm __volatile("mov %%ebp, %0" :
 		   "=r" (ebp));
   return ebp;
+}
+
+static uint32_t get_cr0() {
+  uint32_t cr0;
+  __asm __volatile("mov %%cr0, %0" :
+		   "=r" (cr0));
+  return cr0;
+}
+
+static void set_cr0(uint32_t value) {
+  __asm __volatile("mov %0, %%cr0":
+		   /* No output. */ :
+		   "r" (value));
+}
+
+static uint32_t get_cr3() {
+  uint32_t cr3;
+  __asm __volatile("mov %%cr3, %0" :
+		   "=r" (cr3));
+  return cr3;
+}
+
+static void set_cr3(uintptr_t dir) {
+  __asm __volatile("mov %0, %%cr3":
+		   /* No output. */ :
+		   "r" (dir));
 }
 
 static uint8_t inb(uint16_t io_port) {
