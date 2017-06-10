@@ -23,6 +23,6 @@ struct PageTableEntry{
   unsigned int page_frame_addr : 20;
 } __attribute__((packed));
 
-void setup_paging();
+uintptr_t setup_paging();
 
 #endif  // ASBESTOS_KERNEL_PAGE_H_

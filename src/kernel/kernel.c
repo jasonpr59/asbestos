@@ -10,6 +10,7 @@
 #include "keyboard.h"
 #include "segmentation.h"
 #include "serial.h"
+#include "virtmem.h"
 #include "vga.h"
 
 void kernel_initialize_terminal() {
@@ -35,6 +36,14 @@ void kernel_validate_multiboot_handoff(uint32_t handoff_eax,
   cprintf("Multiboot handoff completed successfully.\n");
 }
 
+void kernel_initialize_virtual_memory() {
+  cprintf("Turning on paging.\n");
+  uintptr_t rpt = setup_paging();
+
+  cprintf("Setting up virtual memory allocator.\n");
+  virtmem_setup_allocator(rpt);
+}
+
 void kernel_main(struct PushedRegisters registers) {
   kernel_initialize_terminal();
   cprintf("Starting up Asbestos.\n");
@@ -48,10 +57,10 @@ void kernel_main(struct PushedRegisters registers) {
 
   cprintf("Initializing interrupt handling system.\n");
   interrupts_initialize();
+  fire_interrupt(INTERRUPT_PASS_THROUGH);
+
+  kernel_initialize_virtual_memory();
 
   cprintf("Survived startup.\n");
-
-  fire_interrupt(INTERRUPT_PASS_THROUGH);
-  setup_paging();
   run_monitor();
 }

@@ -28,7 +28,7 @@ void map(physptr dir, virtptr virtual, physptr physical);
 
 const struct PageTableEntry kZeroEntry = {};
 
-void setup_paging() {
+uintptr_t setup_paging() {
   // Permanently allocate a page for kernel_page_dir.
   physptr kernel_page_dir = (physptr) memory_catalog_allocate_page()->address;
   // Set the "present" bits (and all other bits) to zero.
@@ -65,6 +65,8 @@ void setup_paging() {
 
   set_cr3(kernel_page_dir);
   set_cr0(get_cr0() | (1 << CR0_PAGING_BIT));
+
+  return (uintptr_t) rpt;
 }
 
 // map virtual to physical, in a page tree rooted at dir.  Do not call
