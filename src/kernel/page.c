@@ -55,7 +55,6 @@ uintptr_t setup_paging() {
   struct PageTableEntry *rpt_self = (
       (struct PageTableEntry *) kernel_page_dir) + (rpt >> DIR_SHIFT);
   rpt_self->page_frame_addr = kernel_page_dir >> TABLE_SHIFT;
-  rpt_self->writable = true;
   rpt_self->present = true;
 
   // Identity-map the VGA memory space.
@@ -79,7 +78,6 @@ void map(physptr dir, virtptr virtual, physptr physical) {
     physptr page_addr = allocate_page_table();
      *dir_entry = kZeroEntry;
     dir_entry->page_frame_addr = ((unsigned int) page_addr) >> TABLE_SHIFT;
-    dir_entry->writable = true;
     dir_entry->present = true;
   }
 
@@ -94,7 +92,6 @@ void map(physptr dir, virtptr virtual, physptr physical) {
   *tbl_entry = kZeroEntry;
   tbl_entry->page_frame_addr = ((unsigned int) physical) >> TABLE_SHIFT;
   tbl_entry->present = true;
-  tbl_entry->writable = true;
 }
 
 
